@@ -34,3 +34,4 @@ _testmain.go
 # db
 testing/db.sqlite
 build/db.sqlite
+build/static

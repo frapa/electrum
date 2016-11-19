@@ -1,0 +1,2 @@
+var DashboardView = AbstractView.extend({
+});
