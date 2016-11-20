@@ -1,5 +1,5 @@
 $(function () {
     // Starts program
-    Electrum = new ElectrumView();
-    RootView.open(Electrum)
+    Electrum.mainView = new ElectrumView();
+    RootView.open(Electrum.mainView);
 });

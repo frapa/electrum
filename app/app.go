@@ -5,15 +5,6 @@ import (
 	"github.com/rs/xid"
 )
 
-type Account struct {
-	k.BaseModel
-	Name string
-}
-
-func init() {
-	k.RegisterModel(Account{})
-}
-
 func createTestData() {
 	test := k.NewUser("test", "test")
 	k.Save(test)
@@ -27,7 +18,5 @@ func createTestData() {
 }
 
 func main() {
-	k.RegisterRestResource(Account{})
-
 	k.StartApplication("Electrum", ":5555")
 }

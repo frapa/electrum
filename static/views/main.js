@@ -5,9 +5,6 @@ var ElectrumView = AbstractView.extend({
         'click #menu-reports': 'openReports'
     },
 
-    initialize: function () {
-    },
-
     openDashboard: function () {
         this.open(new DashboardView(), 'main');
     },
