@@ -1,4 +1,10 @@
 var ElectrumView = AbstractView.extend({
+    initialize: function () {
+        this.dashboardView = new DashboardView();
+        this.accountsView = new AccountsView();
+        this.reportsView = new ReportsView();
+    },
+
     events: {
         'click #menu-dashboard': 'openDashboard',
         'click #menu-accounts': 'openAccounts',
@@ -6,14 +12,14 @@ var ElectrumView = AbstractView.extend({
     },
 
     openDashboard: function () {
-        this.open(new DashboardView(), 'main');
+        this.open(this.dashboardView, 'main');
     },
 
     openAccounts: function () {
-        this.open(new AccountsView(), 'main');
+        this.open(this.accountsView, 'main');
     },
 
     openReports: function () {
-        this.open(new ReportsView(), 'main');
+        this.open(this.reportsView, 'main');
     },
 });

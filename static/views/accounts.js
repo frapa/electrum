@@ -1,4 +1,4 @@
-Electrum.accounts = new App_Collection_Account();
+Electrum.accounts = new App_Collection_Account({url: '/controller/accounts/root'});
 
 var AccountsView = AbstractView.extend({
     subviews: {
@@ -9,6 +9,15 @@ var AccountsView = AbstractView.extend({
                 {header: 'Name', attr: 'Name'},
                 {header: 'Description', attr: 'Description'},
                 {header: 'Total', method: 'computeTotal'}
+            ],
+            actions: [
+                {
+                    icon: 'icon-list-add',
+                    callback: function () {
+                        alert('+');
+                    },
+                    tooltip: 'Add subaccount'
+                },
             ]
         }),
     }
