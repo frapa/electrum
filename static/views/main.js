@@ -1,4 +1,4 @@
-var ElectrumView = AbstractView.extend({
+var App_View_Main = AbstractView.extend({
     initialize: function () {
         this.dashboardView = new DashboardView();
         this.accountsView = new AccountsView();
@@ -6,9 +6,15 @@ var ElectrumView = AbstractView.extend({
     },
 
     events: {
-        'click #menu-dashboard': 'openDashboard',
-        'click #menu-accounts': 'openAccounts',
-        'click #menu-reports': 'openReports'
+        'click #menu-dashboard': function () {
+            Electrum.router.navigate('/dashboard', {trigger: true});
+        },
+        'click #menu-accounts': function () {
+            Electrum.router.navigate('/accounts', {trigger: true});
+        },
+        'click #menu-reports': function () {
+            Electrum.router.navigate('/reports', {trigger: true});
+        },
     },
 
     openDashboard: function () {
