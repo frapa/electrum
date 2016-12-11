@@ -9,9 +9,9 @@ var App_View_SingleAccount = AbstractView.extend({
                 columns: [
                     {header: 'Date', attr: 'Date'},
                     {header: 'Description', attr: 'Description'},
-                    {header: 'From', attr: 'getFrom'},
-                    {header: 'To', attr: 'getTo'},
-                    {header: 'Amount', attr: 'getFormattedAmount'},
+                    {header: 'From', link: 'From', attr: 'Name'},
+                    {header: 'To', link: 'To', attr: 'Name'},
+                    {header: 'Amount', method: 'getFormattedAmount'},
                 ],
             })
         };

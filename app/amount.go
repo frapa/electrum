@@ -6,7 +6,7 @@ import (
 
 type Amount struct {
 	k.BaseModel
-	Amount   int
+	Amount   int64
 	Currency string // ISO code
 }
 
