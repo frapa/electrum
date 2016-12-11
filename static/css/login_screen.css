@@ -1,0 +1,21 @@
+#login-screen-background {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: §primary-color;
+}
+
+#log-in-button{
+	display: block;
+}
+
+.login-dialog {
+    background: §background-primary-color;
+    padding: 1.5em;
+    box-shadow: 0 0 2px §border-color;
+}
