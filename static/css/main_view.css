@@ -19,7 +19,7 @@ body {
 
 aside {
     flex-grow: 0;
-    width: 12em;
+    width: 8em; /*was 12em, this way dashboard's aside is the same as the other ones*/
     background: §background-primary-color;
     border-right: 1px solid §border-color;
     box-shadow: 0 0 2px §border-color;
