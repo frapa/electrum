@@ -17,7 +17,7 @@ var App_View_SingleAccount = AbstractView.extend({
                     {header: 'Description', attr: 'Description'},
                     {header: 'From', link: 'From', attr: 'Name'},
                     {header: 'To', link: 'To', attr: 'Name'},
-                    {header: 'Amount', method: 'getFormattedAmount'},
+                    {header: 'Amount', attr: 'Amount'},
                 ],
             })
         };
