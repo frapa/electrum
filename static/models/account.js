@@ -4,5 +4,8 @@ _.extend(App_Model_Account.prototype, {
     },
     computeLastMonth: function () {
 		return "last month";
+	},
+    computeLastYear: function () {
+		return "last year";
 	}
 });

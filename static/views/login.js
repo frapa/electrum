@@ -1,6 +1,6 @@
 var App_View_LogIn = AbstractView.extend({
 	subviews: {
-		name: new Kernel_View_Ui_Entry({
+		username: new Kernel_View_Ui_Entry({
 			label: 'username'
 		}),
 		password: new Kernel_View_Ui_Entry({

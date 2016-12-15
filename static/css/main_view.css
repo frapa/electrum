@@ -19,7 +19,8 @@ body {
 
 aside {
     flex-grow: 0;
-    width: 8em; /*was 12em, this way dashboard's aside is the same as the other ones*/
+    flex-shrink: 0;
+    width: 12em;
     background: §background-primary-color;
     border-right: 1px solid §border-color;
     box-shadow: 0 0 2px §border-color;
@@ -37,8 +38,21 @@ aside {
     color: white
 }
 
+.minor-menu-link {
+    font-size: 90%;
+    padding: 0.5em 2.5em;
+    cursor: pointer;
+    font-weight: 300;
+}
+
+.minor-menu-link:hover {
+    background: §primary-color;
+    color: white
+}
+
 main {
     flex-grow: 1;
+    flex-shrink: 1;
     padding: 1em 3em;
 }
 

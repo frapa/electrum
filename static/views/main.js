@@ -2,7 +2,11 @@ var App_View_Main = AbstractView.extend({
     initialize: function () {
         this.dashboardView = new DashboardView();
         this.accountsView = new AccountsView();
-        this.categoriesView = new CategoriesView();
+        /*
+        this.assetsView = new AccountsView();
+        this.incomesView = new AccountsView();
+        this.expensesView = new AccountsView();
+        */
         this.reportsView = new ReportsView();
     },
 
@@ -13,9 +17,17 @@ var App_View_Main = AbstractView.extend({
         'click #menu-accounts': function () {
             Electrum.router.navigate('/accounts', {trigger: true});
         },
-        'click #menu-categories': function () {
-            Electrum.router.navigate('/categories', {trigger: true});
+        /*
+        'click #menu-assets': function () {
+            Electrum.router.navigate('/assets', {trigger: true});
         },
+        'click #menu-incomes': function () {
+            Electrum.router.navigate('/incomes', {trigger: true});
+        },
+        'click #menu-expenses': function () {
+            Electrum.router.navigate('/expenses', {trigger: true});
+        },
+        */
         'click #menu-reports': function () {
             Electrum.router.navigate('/reports', {trigger: true});
         },
@@ -29,9 +41,19 @@ var App_View_Main = AbstractView.extend({
         this.open(this.accountsView, 'main');
     },
     
-    openCategories: function () {
-        this.open(this.categoriesView, 'main');
+    /*
+    openAssets: function () {
+        this.open(this.assetsView, 'main');
     },
+    
+    openIncomes: function () {
+        this.open(this.incomesView, 'main');
+    },
+    
+    openExpenses: function () {
+        this.open(this.expensesView, 'main');
+    },
+    */
 
     openReports: function () {
         this.open(this.reportsView, 'main');
