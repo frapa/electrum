@@ -20,3 +20,9 @@
     padding: 1.5em;
     box-shadow: 0 0 2px §border-color;
 }
+
+#change-user-text{
+	color: §primary-color;
+	font-size: 70%;
+	text-align: center;
+}

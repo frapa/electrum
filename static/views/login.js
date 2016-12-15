@@ -13,7 +13,7 @@ var App_View_LogIn = AbstractView.extend({
 	},
 	
 	login: function() {
-		var username = this.subviews.name.getValue();
+		var username = this.subviews.username.getValue();
 		var password = this.subviews.password.getValue();
 		
 		if (!username && !password) {
