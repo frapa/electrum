@@ -21,7 +21,8 @@ var AccountsView = AbstractView.extend({
                 {
                     icon: 'icon-list-add',
                     callback: function () {
-                        var dialog = new App_View_Dialog_NewAccount(this.model, this.childCollection);
+                        var dialog = new App_View_Dialog_NewAccount(
+                            this.model, this.childCollection);
                         dialog.show(this.$button, 'ne', {tableAction: true});
                     },
                     tooltip: 'Add subaccount'

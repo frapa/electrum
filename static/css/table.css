@@ -1,0 +1,60 @@
+section table.table {
+    height: 100%;
+    border: 0;
+    background: §background-secondary-color;
+    display: flex;
+    flex-direction: column;
+}
+
+section table.table thead {
+    flex-shrink: 0;
+    display: block;
+    position: relative;
+    z-index: 3;
+    background: §background-primary-color;
+    color: black;
+    border-bottom: 1px solid §border-color;
+    box-shadow: 0 0.25em 0.25em -0.25em §border-color;
+}
+
+section table.table > tbody {
+    flex-grow: 1;
+    padding-top: 2em;
+    display: block;
+    overflow-y: scroll;
+}
+
+section table.table tr {
+    display: flex;
+    background: §background-primary-color;
+}
+
+
+section table.table > thead > tr {
+    margin: 0 3em;
+    background: transparent;
+}
+
+section table.table > tbody > tr {
+    margin: 0 3em;
+    border-right: 1px solid §border-color;
+    border-left: 1px solid §border-color;
+}
+
+section table.table > tbody > tr:first-child {
+    border-top: 1px solid §border-color;
+}
+
+section table.table > tbody > tr:last-child {
+    border-bottom: 1px solid §border-color;
+    margin-bottom: 2em;
+}
+
+section table.table th {
+    flex-grow: 1;
+    border: 0;
+}
+
+section table.table td {
+    flex-grow: 1;
+}
