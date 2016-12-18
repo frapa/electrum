@@ -22,7 +22,11 @@ aside {
     flex-grow: 0;
     flex-shrink: 0;
     width: 12em;
+<<<<<<< HEAD
     background: §background-secondary-color;
+=======
+    background: §background-primary-color;
+>>>>>>> 2c6a5cebbe65754e4f02b5c9f07ed24b66b42533
     border-right: 1px solid §border-color;
     box-shadow: 0 0 0.25em §border-color;
     z-index: 3;
@@ -46,8 +50,25 @@ aside header {
     color: white
 }
 
+.minor-menu-link {
+    font-size: 90%;
+    padding: 0.5em 2.5em;
+    cursor: pointer;
+    font-weight: 300;
+}
+
+.minor-menu-link:hover {
+    background: §primary-color;
+    color: white
+}
+
 main {
     flex-grow: 1;
+<<<<<<< HEAD
+=======
+    flex-shrink: 1;
+    padding: 1em 3em;
+>>>>>>> 2c6a5cebbe65754e4f02b5c9f07ed24b66b42533
 }
 
 main > div:first-child {

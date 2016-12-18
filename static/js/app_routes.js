@@ -18,8 +18,14 @@ Electrum.router = new Backbone.Router({
                 }
             });
         },
-        'categories': function () {
-            Electrum.mainView.openCategories();
+        'assets': function () {
+            Electrum.mainView.openAssets();
+        },
+        'incomes': function () {
+            Electrum.mainView.openIncomes();
+        },
+        'expenses': function () {
+            Electrum.mainView.openExpenses();
         },
         'reports': function () {
             Electrum.mainView.openReports();
