@@ -1,10 +1,9 @@
 var App_View_Main = AbstractView.extend({
     initialize: function () {
         this.dashboardView = new DashboardView();
-        this.accountsView = new AccountsView('acc', 'assets');
         
         this.assetsView = new AccountsView('Assets', 'assets');
-        this.incomesView = new AccountsView('Incomes', 'income');
+        this.incomesView = new AccountsView('Income', 'income');
         this.expensesView = new AccountsView('Expenses', 'expenses');
         
         this.reportsView = new ReportsView();
@@ -37,10 +36,6 @@ var App_View_Main = AbstractView.extend({
         this.open(this.dashboardView, 'main');
     },
 
-    openAccounts: function () {
-        this.open(this.accountsView, 'main');
-    },
-    
     openAssets: function () {
         this.open(this.assetsView, 'main');
     },

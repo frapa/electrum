@@ -10,6 +10,9 @@ type Account struct {
 	Description string
 	Type        string
 	Icon        string
+	// Indicates is this is a father
+	// account for a particular type
+	Father int64
 }
 
 func init() {

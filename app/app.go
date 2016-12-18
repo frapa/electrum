@@ -53,25 +53,32 @@ type accountController struct {
 	k.GenericRestController
 }
 
-func (c *accountController) GetRoot(ctx *ripple.Context) {
+func (c *accountController) Get(ctx *ripple.Context) {
 	if !c.Authenticate(ctx) {
 		return
 	}
 
-	allAccounts := k.All("Account")
-	subAccountsIds := allAccounts.To("SubAccounts").GetIds()
-	rootAccounts := allAccounts.Exclude(subAccountsIds)
+	type_ := ctx.Params["type"]
 
-	ctx.Response.Body = rootAccounts.GetAll()
+	/*allAccounts := k.All("Account")
+	subAccountsIds := allAccounts.To("SubAccounts").GetIds()
+	rootAccounts := allAccounts.Exclude(subAccountsIds)*/
+
+	typeAndFather := k.And(k.F("Type", "=", type_), k.F("Father", "=", "1"))
+	assetsAccounts := k.All("Account").Filter(typeAndFather).To("SubAccounts")
+
+	ctx.Response.Body = assetsAccounts.GetAll()
 }
 
 func main() {
-	//createTestData()
+	/*k.UpdateSchema()
+	createTestData()*/
 
 	istAccCont := new(accountController)
 	k.App.RegisterController("accounts", istAccCont)
-	k.App.AddRoute(ripple.Route{Pattern: "/controller/accounts", Controller: "accounts"})
-	k.App.AddRoute(ripple.Route{Pattern: "/controller/accounts/:_action", Controller: "accounts"})
+	k.App.AddRoute(ripple.Route{
+		Pattern:    "/controller/accounts/:type",
+		Controller: "accounts"})
 	http.HandleFunc("/controller/", k.App.ServeHTTP)
 
 	k.StartApplication("Electrum", ":5555")
