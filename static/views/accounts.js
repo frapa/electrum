@@ -1,12 +1,12 @@
 Electrum.allAccounts = new App_Collection_Account();
 Electrum.assetAccounts = new App_Collection_Account({
-    url: '/controller/accounts/assets'
+    url: '/controller/accounts/ByType/asset'
 });
 Electrum.incomeAccounts = new App_Collection_Account({
-    url: '/controller/accounts/income'
+    url: '/controller/accounts/ByType/income'
 });
 Electrum.expensesAccounts = new App_Collection_Account({
-    url: '/controller/accounts/expenses'
+    url: '/controller/accounts/ByType/expense'
 });
 
 var AccountsView = AbstractView.extend({
@@ -14,11 +14,11 @@ var AccountsView = AbstractView.extend({
         this.title = title;
         this.filterBy = filterBy;
 
-        if (filterBy == 'assets') {
+        if (filterBy == 'asset') {
             this.accounts = Electrum.assetAccounts;
         } else if (filterBy == 'income') {
             this.accounts = Electrum.incomeAccounts;
-        } else if (filterBy == 'expenses') {
+        } else if (filterBy == 'expense') {
             this.accounts = Electrum.expensesAccounts;
         } else {
             console.error("There exists no account type '" + filterBy + "'");

@@ -13,6 +13,12 @@ type Account struct {
 	// Indicates is this is a father
 	// account for a particular type
 	Father int64
+	// This can be used by the imports
+	// to store some information.
+	// Example: gnucash import stores
+	// gnucash id in order to identify
+	// account in a second import
+	ImportInfo string
 }
 
 func init() {

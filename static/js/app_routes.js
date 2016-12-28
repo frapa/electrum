@@ -21,8 +21,8 @@ Electrum.router = new Backbone.Router({
         'assets': function () {
             Electrum.mainView.openAssets();
         },
-        'incomes': function () {
-            Electrum.mainView.openIncomes();
+        'income': function () {
+            Electrum.mainView.openIncome();
         },
         'expenses': function () {
             Electrum.mainView.openExpenses();

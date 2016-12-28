@@ -10,6 +10,7 @@ type Transaction struct {
 	Description string
 	Date        time.Time
 	Amount      int64
+	ImportInfo  string // see comment in account.go
 }
 
 func init() {

@@ -1,10 +1,9 @@
 package main
 
 import (
+	"fmt"
 	k "github.com/frapa/candle/kernel"
-	"github.com/frapa/ripple"
-	"net/http"
-	//"github.com/rs/xid"
+	"time"
 )
 
 func createTestData() {
@@ -49,37 +48,16 @@ func createTestData() {
 	acs[19].Link("SubAccounts", acs[20])
 }
 
-type accountController struct {
-	k.GenericRestController
-}
-
-func (c *accountController) Get(ctx *ripple.Context) {
-	if !c.Authenticate(ctx) {
-		return
-	}
-
-	type_ := ctx.Params["type"]
-
-	/*allAccounts := k.All("Account")
-	subAccountsIds := allAccounts.To("SubAccounts").GetIds()
-	rootAccounts := allAccounts.Exclude(subAccountsIds)*/
-
-	typeAndFather := k.And(k.F("Type", "=", type_), k.F("Father", "=", "1"))
-	assetsAccounts := k.All("Account").Filter(typeAndFather).To("SubAccounts")
-
-	ctx.Response.Body = assetsAccounts.GetAll()
-}
-
 func main() {
-	/*k.UpdateSchema()
-	createTestData()*/
+	k.UpdateSchema()
+	/*createTestData()*/
 
-	istAccCont := new(accountController)
-	k.App.RegisterController("accounts", istAccCont)
-	k.App.AddRoute(ripple.Route{
-		Pattern:    "/controller/accounts/:type",
-		Controller: "accounts"})
-	http.HandleFunc("/controller/", k.App.ServeHTTP)
+	start := time.Now()
+	ImportBookFromGnuCash("cash.gnucash")
+	elapsed := time.Since(start)
+	fmt.Println(elapsed)
+
+	initAccountsController()
 
 	k.StartApplication("Electrum", ":5555")
 }
