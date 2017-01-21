@@ -19,5 +19,20 @@ _.extend(App_Model_Transaction.prototype, {
     
     setAmount: function (value) {
         this.set({Amount: this.parseAmount(value)});
+    },
+
+    sync: function (method, model, options) {
+        var oldCallback = options.success;
+        options.success = function (transaction) {
+            if (method != 'GET') {
+                httpReq({
+                    url: '/controller/transaction/updateAccountTotals/' + transaction.Id
+                });
+            }
+
+            oldCallback();
+        }
+        
+        return Backbone.sync(method, model, options);
     }
 });

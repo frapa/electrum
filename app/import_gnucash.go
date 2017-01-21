@@ -50,9 +50,13 @@ type SplitGnu struct {
 }
 
 type importHelper struct {
-	xmlData    []byte
-	accountMap map[string]*Account
-	root       *RootGnu
+	xmlData       []byte
+	accountMap    map[string]*Account
+	totalCacheMap map[string]int64
+	monthCacheMap map[string]int64
+	yearCacheMap  map[string]int64
+	gnucashMap    map[string]AccountGnu
+	root          *RootGnu
 }
 
 func newImporter(filename string) *importHelper {
@@ -147,6 +151,10 @@ func (i *importHelper) generateAccountStructure() {
 		"equity":  getOrCreateRootAccount("equity")}
 
 	i.accountMap = make(map[string]*Account)
+	i.totalCacheMap = make(map[string]int64)
+	i.monthCacheMap = make(map[string]int64)
+	i.yearCacheMap = make(map[string]int64)
+	i.gnucashMap = make(map[string]AccountGnu)
 
 	var rootId string
 	var currentAccount *Account
@@ -181,6 +189,10 @@ func (i *importHelper) generateAccountStructure() {
 
 		// Map to find accounts later
 		i.accountMap[id] = currentAccount
+		i.totalCacheMap[id] = 0
+		i.monthCacheMap[id] = 0
+		i.yearCacheMap[id] = 0
+		i.gnucashMap[id] = gnuCashAccount
 
 		// fill in data
 		currentAccount.Name = gnuCashAccount.Name
@@ -204,6 +216,29 @@ func (i *importHelper) generateAccountStructure() {
 func wasTransactionAlreadyImported(id string) bool {
 	query := k.All("Transaction").Filter("ImportInfo", "=", id)
 	return query.Count() != 0
+}
+
+var now time.Time = time.Now()
+var beginningOfMonth time.Time = time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, time.UTC)
+var beginningOfYear time.Time = time.Date(now.Year(), 1, 1, 0, 0, 0, 0, time.UTC)
+
+func (i *importHelper) updateCache(id string, variation int64, date time.Time) {
+	if account, ok := i.gnucashMap[id]; ok {
+		i.totalCacheMap[id] += variation
+
+		if date.After(beginningOfMonth) {
+			i.monthCacheMap[id] += variation
+		}
+
+		if date.After(beginningOfYear) {
+			i.yearCacheMap[id] += variation
+		}
+
+		parentId := account.Parent
+		if parentId != "" {
+			i.updateCache(parentId, variation, date)
+		}
+	}
 }
 
 func (i *importHelper) importTransactions() {
@@ -240,6 +275,26 @@ func (i *importHelper) importTransactions() {
 		k.Save(transaction)
 		transaction.Link("From", fromAccount)
 		transaction.Link("To", toAccount)
+
+		// Sum up transactions to initialize the caches correctly
+		i.updateCache(fromSplit.Account, -amount, transaction.Date)
+		i.updateCache(toSplit.Account, amount, transaction.Date)
+	}
+
+	// save caches
+	for _, gnuCashAccount := range i.root.Book.Accounts {
+		type_ := strings.ToLower(gnuCashAccount.Type)
+		id := gnuCashAccount.Id
+
+		if type_ != "root" {
+			account := i.accountMap[id]
+			account.TotalCache += i.totalCacheMap[id]
+			account.MonthCache += i.monthCacheMap[id]
+			account.YearCache += i.yearCacheMap[id]
+			account.LastCacheUpdate = now
+
+			k.Save(account)
+		}
 	}
 }
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	k "github.com/frapa/candle/kernel"
 	"time"
@@ -48,16 +49,43 @@ func createTestData() {
 	acs[19].Link("SubAccounts", acs[20])
 }
 
+func parseFlags() {
+	var createUsers bool
+	flag.BoolVar(&createUsers, "u", false, "Create test users before running")
+	var importBook bool
+	flag.BoolVar(&importBook, "i", false, "import gnucash book")
+	var testData bool
+	flag.BoolVar(&testData, "t", false, "create test data")
+
+	flag.Parse()
+
+	if createUsers {
+		RegisterNewUser("frapa", "test", "frapa@example.com")
+		RegisterNewUser("frapa2", "test2", "frapa2@example.com")
+	}
+
+	if importBook {
+		start := time.Now()
+		ImportBookFromGnuCash("cash.gnucash")
+		elapsed := time.Since(start)
+		fmt.Println(elapsed)
+	}
+
+	if testData {
+		b := NewBook()
+		b.Name = "234"
+		k.Save(b)
+	}
+}
+
 func main() {
 	k.UpdateSchema()
 	/*createTestData()*/
 
-	start := time.Now()
-	ImportBookFromGnuCash("cash.gnucash")
-	elapsed := time.Since(start)
-	fmt.Println(elapsed)
+	parseFlags()
 
 	initAccountsController()
+	initTransactionController()
 
 	k.StartApplication("Electrum", ":5555")
 }

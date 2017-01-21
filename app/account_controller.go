@@ -10,7 +10,7 @@ type accountController struct {
 	k.GenericRestController
 }
 
-func (c *accountController) GetByType(ctx *ripple.Context) {
+/*func (c *accountController) GetByType(ctx *ripple.Context) {
 	if !c.Authenticate(ctx) {
 		return
 	}
@@ -21,7 +21,7 @@ func (c *accountController) GetByType(ctx *ripple.Context) {
 	assetsAccounts := k.All("Account").Filter(typeAndFather).To("SubAccounts")
 
 	ctx.Response.Body = assetsAccounts.GetAll()
-}
+}*/
 
 func (c *accountController) GetInOut(ctx *ripple.Context) {
 	if !c.Authenticate(ctx) {
@@ -29,14 +29,22 @@ func (c *accountController) GetInOut(ctx *ripple.Context) {
 	}
 
 	accountId := ctx.Params["param"]
+	user := c.GetUser(ctx)
 
 	account := k.All("Account").Filter("Id", "=", accountId)
-	transactions := account.To("In").GetAll()
-	outTransactions := account.To("Out").GetAll()
+	account = account.ApplyReadPermissions(user)
 
-	transactions = append(transactions, outTransactions...)
+	if account.Count() == 0 {
+		k.NewRestError("No Account with Id '" + accountId +
+			"' (or permissions missing).").Send(ctx)
+	} else {
+		transactions := account.To("In").ApplyReadPermissions(user).GetAll()
+		outTransactions := account.To("Out").ApplyReadPermissions(user).GetAll()
 
-	ctx.Response.Body = transactions
+		transactions = append(transactions, outTransactions...)
+
+		ctx.Response.Body = transactions
+	}
 }
 
 func initAccountsController() {

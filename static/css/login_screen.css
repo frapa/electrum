@@ -8,6 +8,7 @@
 	justify-content: center;
 	align-items: center;
 	background: §primary-color;
+    z-index: 1000;
 }
 
 #log-in-button{

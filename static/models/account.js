@@ -1,11 +1,13 @@
 _.extend(App_Model_Account.prototype, {
-    computeTotal: function () {
-        return "ciao";
+    getTotalCache: function () {
+        return this.get('TotalCache') / 100.0;
     },
-    computeLastMonth: function () {
-		return "last month";
-	},
-    computeLastYear: function () {
-		return "last year";
-	}
+
+    getMonthCache: function () {
+        return this.get('MonthCache') / 100.0;
+    },
+
+    getYearCache: function () {
+        return this.get('YearCache') / 100.0;
+    },
 });

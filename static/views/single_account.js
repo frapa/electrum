@@ -32,7 +32,7 @@ var App_View_SingleAccount = AbstractView.extend({
             {header: 'Date', attr: 'Date'},
             {header: 'Description', attr: 'Description'},
             {header: 'From', link: 'From', attr: 'Name'},
-            {header: 'Amount', type: 'float',
+            {header: 'Spent', type: 'float',
                 method: 'getFormattedAmount',
                 onSave: function (cell, transaction, value) {
                     transaction.setAmount(value)
@@ -55,7 +55,7 @@ var App_View_SingleAccount = AbstractView.extend({
             {header: 'Date', attr: 'Date'},
             {header: 'Description', attr: 'Description'},
             {header: 'To', link: 'To', attr: 'Name'},
-            {header: 'Amount', type: 'float',
+            {header: 'Earned', type: 'float',
                 method: 'getFormattedAmount',
                 onSave: function (cell, transaction, value) {
                     transaction.setAmount(value)
@@ -109,15 +109,16 @@ var App_View_SingleAccount = AbstractView.extend({
                 cell.data = transaction.getFormattedAmount();
                 transaction.transferIn = transaction.get('Amount');
             } else {
-                cell.data = 'aa';
+                cell.data = '';
                 transaction.transferIn = 0;
             }
 
             anmgr.notifyEnd();
+            return cell.data;
         };
 
         if (transaction.transfer !== undefined) {
-            setData(transaction.transfer);
+            return setData(transaction.transfer);
         } else {
             transaction.once('transfer_found', setData);
         }
@@ -130,15 +131,16 @@ var App_View_SingleAccount = AbstractView.extend({
                 cell.data = transaction.getFormattedAmount();
                 transaction.transferOut = transaction.get('Amount');
             } else {
-                cell.data = 'bb';
+                cell.data = '';
                 transaction.transferOut = 0;
             }
 
             anmgr.notifyEnd();
+            return cell.data;
         };
 
         if (transaction.transfer !== undefined) {
-            setData(transaction.transfer);
+            return setData(transaction.transfer);
         } else {
             transaction.once('transfer_found', setData);
         }
@@ -223,7 +225,6 @@ var App_View_SingleAccount = AbstractView.extend({
         var notDirection = direction == 'From' ? 'To' : 'From';
         var absAmount = Math.abs(netAmount);
 
-        console.log(direction, notDirection, absAmount);
         transaction.set({Amount: absAmount});
 
         if (transaction.transferLink === undefined) {
