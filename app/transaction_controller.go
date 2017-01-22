@@ -14,23 +14,27 @@ func (c *transactionController) GetUpdateAccountTotals(ctx *ripple.Context) {
 		return
 	}
 
+	user := c.GetUser(ctx)
 	transactionId := ctx.Params["id"]
 
 	var transaction Transaction
 	transQuery := k.All("Transaction").Filter("Id", "=", transactionId)
+	transQuery = transQuery.ApplyReadPermissions(user)
 
-	transQuery.Get(&transaction)
+	if transQuery.Count() != 0 {
+		transQuery.Get(&transaction)
 
-	var fromAccount, toAccount Account
-	transQuery.To("From").Get(&fromAccount)
-	transQuery.To("To").Get(&toAccount)
+		var fromAccount, toAccount Account
+		transQuery.To("From").ApplyWritePermissions(user).Get(&fromAccount)
+		transQuery.To("To").ApplyWritePermissions(user).Get(&toAccount)
 
-	// total cache
-	fromAccount.UpdateCache(transaction.Date, -transaction.Amount)
-	toAccount.UpdateCache(transaction.Date, transaction.Amount)
+		// total cache
+		fromAccount.UpdateCache(transaction.Date, -transaction.Amount)
+		toAccount.UpdateCache(transaction.Date, transaction.Amount)
 
-	k.Save(&fromAccount)
-	k.Save(&toAccount)
+		k.Save(&fromAccount)
+		k.Save(&toAccount)
+	}
 }
 
 func initTransactionController() {

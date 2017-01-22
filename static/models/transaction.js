@@ -25,12 +25,12 @@ _.extend(App_Model_Transaction.prototype, {
         var oldCallback = options.success;
         options.success = function (transaction) {
             if (method != 'GET') {
-                httpReq({
+                Backbone.ajax({
                     url: '/controller/transaction/updateAccountTotals/' + transaction.Id
                 });
             }
 
-            oldCallback();
+            oldCallback.apply(null, arguments);
         }
         
         return Backbone.sync(method, model, options);

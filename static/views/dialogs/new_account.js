@@ -1,10 +1,6 @@
 var App_View_Dialog_NewAccount = Kernel_View_Ui_Dialog.extend({
     title: 'Add subaccount',
 
-    subviews: {
-        name: new Kernel_View_Ui_Entry({label: 'Name'})
-    },
-
     buttons: {
         Cancel: function () { return true; },
         Create: 'createAccount'
@@ -33,6 +29,10 @@ var App_View_Dialog_NewAccount = Kernel_View_Ui_Dialog.extend({
 
     initialize: function (parent, collection, add) {
         this.collection = collection;
+
+        this.subviews = {
+            name: new Kernel_View_Ui_Entry({label: 'Name'})
+        };
 
         if (add) {
             this.title = 'Add Account';
