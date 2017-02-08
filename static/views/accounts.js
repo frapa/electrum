@@ -1,6 +1,6 @@
 Electrum.allAccounts = new App_Collection_Account();
 
-var AccountsView = AbstractView.extend({
+var App_View_AccountsView = AbstractView.extend({
 	initialize: function (title, filterBy) {
         this.title = title;
         this.filterBy = filterBy;
@@ -49,13 +49,20 @@ var AccountsView = AbstractView.extend({
         var rootGlobalName = 'root' + globalName.charAt(0).toUpperCase() + globalName.slice(1);
         if (!(globalName in Electrum)) {
             fetchType(function (root, accounts) {
+                if (!Electrum.allAccountTypes) {
+                    Electrum.allAccountTypes = [];
+                    Electrum.allRootAccounts = [];
+                }
+                Electrum.allAccountTypes.push(accounts);
+                Electrum.allRootAccounts.push(root);
+
                 Electrum[rootGlobalName] = root;
                 Electrum[globalName] = accounts;
                 callback();
             });
         } else {
-            _this.rootAccount = Electrum[rootGlobalName];
-            _this.accounts = Electrum[globalName];
+            this.rootAccount = Electrum[rootGlobalName];
+            this.accounts = Electrum[globalName];
             callback();
         }
     },

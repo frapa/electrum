@@ -1,12 +1,14 @@
 var App_View_Main = AbstractView.extend({
     initialize: function () {
-        this.dashboardView = new DashboardView();
+        this.dashboardView = new App_View_DashboardView();
         
-        this.assetsView = new AccountsView('Assets', 'asset');
-        this.incomeView = new AccountsView('Income', 'income');
-        this.expensesView = new AccountsView('Expenses', 'expense');
+        this.assetsView = new App_View_AccountsView('Assets', 'asset');
+        this.incomeView = new App_View_AccountsView('Income', 'income');
+        this.expensesView = new App_View_AccountsView('Expenses', 'expense');
         
-        this.reportsView = new ReportsView();
+        this.reportsView = new App_View_ReportsView();
+
+        this.menu = new App_View_Menu();
     },
 
     events: {
@@ -30,6 +32,8 @@ var App_View_Main = AbstractView.extend({
         'click #menu-reports': function () {
             Electrum.router.navigate('/reports', {trigger: true});
         },
+
+        'click #logo-header': 'toggleMenu'
     },
 
     openDashboard: function () {
@@ -50,5 +54,22 @@ var App_View_Main = AbstractView.extend({
 
     openReports: function () {
         this.open(this.reportsView, 'main');
+    },
+
+    toggleMenu: function () {
+        if (this.menu.isOpen) {
+            this.closeMenu();
+        } else {
+            this.openMenu();
+        }
+    },
+
+    openMenu: function () {
+        this.menu.open()
+        this.open(this.menu, 'menu');
+    },
+    
+    closeMenu: function () {
+        this.menu.close();
     },
 });

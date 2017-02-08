@@ -6,8 +6,7 @@ import (
 	"fmt"
 	k "github.com/frapa/candle/kernel"
 	"io/ioutil"
-	"log"
-	"os"
+	"mime/multipart"
 	"strings"
 	"time"
 )
@@ -57,35 +56,38 @@ type importHelper struct {
 	yearCacheMap  map[string]int64
 	gnucashMap    map[string]AccountGnu
 	root          *RootGnu
+	group         *k.Group
 }
 
-func newImporter(filename string) *importHelper {
+func newImporter(file multipart.File, group *k.Group) (*importHelper, error) {
 	importer := new(importHelper)
-	importer.xmlData = loadGnuCashXml(filename)
-	return importer
+	importer.group = group
+	data, err := loadGnuCashXml(file)
+	importer.xmlData = data
+	return importer, err
 }
 
-func loadGnuCashXml(filename string) []byte {
-	// Assume it's gzipped, I think it's mothe than
+func loadGnuCashXml(file multipart.File) ([]byte, error) {
+	// Assume it's gzipped, I think it's more than
 	// ten years this is the default
-	gzipfile, err := os.Open(filename)
+	/*gzipfile, err := os.Open(filename)
 	if err != nil {
 		log.Println(err)
 	}
-	defer gzipfile.Close()
+	defer gzipfile.Close()*/
 
-	xmlfile, err := gzip.NewReader(gzipfile)
+	xmlfile, err := gzip.NewReader(file)
 	if err != nil {
-		log.Println(err)
+		return []byte{}, err
 	}
 	defer xmlfile.Close()
 
 	xmlData, err := ioutil.ReadAll(xmlfile)
 	if err != nil {
-		log.Println(err)
+		return []byte{}, err
 	}
 
-	return xmlData
+	return xmlData, err
 }
 
 // Returns the Split which should be imported as from account
@@ -105,14 +107,14 @@ func getToSplit(t *TransactionGnu) *SplitGnu {
 	}
 }
 
-func (i *importHelper) parseGnuCash() {
+func (i *importHelper) parseGnuCash() error {
 	i.root = new(RootGnu)
-	xml.Unmarshal(i.xmlData, i.root)
+	return xml.Unmarshal(i.xmlData, i.root)
 }
 
-func getOrCreateRootAccount(type_ string) *Account {
+func (i *importHelper) getOrCreateRootAccount(type_ string) *Account {
 	filter := k.And(k.F("Type", "=", type_), k.F("Father", "=", "1"))
-	query := k.All("Account").Filter(filter)
+	query := k.All("Account").ApplyReadPermissionsGroup(i.group).Filter(filter)
 
 	var account *Account
 	if query.Count() == 0 {
@@ -122,6 +124,7 @@ func getOrCreateRootAccount(type_ string) *Account {
 		account.Father = 1
 		account.Name = "Father '" + type_ + "' account"
 		k.Save(account)
+		account.Link("Groups", *i.group)
 	} else {
 		// Get the existing one!
 		var tempAccount Account
@@ -132,8 +135,8 @@ func getOrCreateRootAccount(type_ string) *Account {
 	return account
 }
 
-func wasAccountAlreadyImported(id string) (bool, *Account) {
-	query := k.All("Account").Filter("ImportInfo", "=", id)
+func (i *importHelper) wasAccountAlreadyImported(id string) (bool, *Account) {
+	query := k.All("Account").ApplyWritePermissionsGroup(i.group).Filter("ImportInfo", "=", id)
 	if query.Count() != 0 {
 		tempAccount := new(Account)
 		query.Get(tempAccount)
@@ -143,12 +146,12 @@ func wasAccountAlreadyImported(id string) (bool, *Account) {
 	}
 }
 
-func (i *importHelper) generateAccountStructure() {
+func (i *importHelper) generateAccountStructure() error {
 	rootAccounts := map[string]*Account{
-		"asset":   getOrCreateRootAccount("asset"),
-		"income":  getOrCreateRootAccount("income"),
-		"expense": getOrCreateRootAccount("expense"),
-		"equity":  getOrCreateRootAccount("equity")}
+		"asset":   i.getOrCreateRootAccount("asset"),
+		"income":  i.getOrCreateRootAccount("income"),
+		"expense": i.getOrCreateRootAccount("expense"),
+		"equity":  i.getOrCreateRootAccount("equity")}
 
 	i.accountMap = make(map[string]*Account)
 	i.totalCacheMap = make(map[string]int64)
@@ -163,9 +166,9 @@ func (i *importHelper) generateAccountStructure() {
 		id := gnuCashAccount.Id
 
 		// Do not import account twice if the import is
-		// run twice, rather only update wat wasn't imported yet
+		// run twice, rather only update what wasn't imported yet
 		var wasIt bool
-		if wasIt, currentAccount = wasAccountAlreadyImported(id); !wasIt {
+		if wasIt, currentAccount = i.wasAccountAlreadyImported(id); !wasIt {
 			switch type_ {
 			case "root":
 				rootId = id
@@ -180,7 +183,9 @@ func (i *importHelper) generateAccountStructure() {
 				currentAccount = NewAccount()
 				currentAccount.Type = "income"
 			case "equity":
-				currentAccount = rootAccounts["equity"]
+				//currentAccount = rootAccounts["equity"]
+				currentAccount = NewAccount()
+				currentAccount.Type = "equity"
 			default:
 				fmt.Println("Unsupported account type '" + type_ + "'")
 				continue
@@ -210,7 +215,10 @@ func (i *importHelper) generateAccountStructure() {
 			parent = rootAccounts[currentAccount.Type]
 		}
 		currentAccount.Link("Parent", parent)
+		currentAccount.Link("Groups", *i.group)
 	}
+
+	return nil
 }
 
 func wasTransactionAlreadyImported(id string) bool {
@@ -241,7 +249,7 @@ func (i *importHelper) updateCache(id string, variation int64, date time.Time) {
 	}
 }
 
-func (i *importHelper) importTransactions() {
+func (i *importHelper) importTransactions() error {
 	for _, gnuCashTransaction := range i.root.Book.Transactions {
 		id := gnuCashTransaction.Id
 
@@ -275,6 +283,7 @@ func (i *importHelper) importTransactions() {
 		k.Save(transaction)
 		transaction.Link("From", fromAccount)
 		transaction.Link("To", toAccount)
+		transaction.Link("Groups", *i.group)
 
 		// Sum up transactions to initialize the caches correctly
 		i.updateCache(fromSplit.Account, -amount, transaction.Date)
@@ -296,22 +305,38 @@ func (i *importHelper) importTransactions() {
 			k.Save(account)
 		}
 	}
+
+	return nil
 }
 
-func (i *importHelper) importBook() {
-	i.parseGnuCash()
+func (i *importHelper) importBook() error {
+	err := i.parseGnuCash()
+	if err != nil {
+		return err
+	}
 
 	k.BeginTransaction()
 
-	i.generateAccountStructure()
-	i.importTransactions()
+	err = i.generateAccountStructure()
+	if err != nil {
+		return err
+	}
+
+	err = i.importTransactions()
+	if err != nil {
+		return err
+	}
 
 	k.CommitTransaction()
 
-	println("End")
+	return nil
 }
 
-func ImportBookFromGnuCash(filename string) {
-	importer := newImporter(filename)
-	importer.importBook()
+func ImportBookFromGnuCash(file multipart.File, group *k.Group) error {
+	importer, err := newImporter(file, group)
+	if err != nil {
+		return err
+	}
+
+	return importer.importBook()
 }

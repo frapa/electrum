@@ -1,0 +1,29 @@
+<div id="import-gnucash">
+    <header class="navigation">
+        <h1>Import from gnucash</h1>
+        <span class="toolbar">
+        </span>
+    </header>
+    <content>
+        <form method="post" id="gnucash-form"
+            action="/controller/import/gnucash/" enctype='multipart/form-data'>
+            <div class="columns">
+                <div>
+                    <subview name="gnucash_import_file_upload"></subview>
+                </div>
+                <div>
+                    <p>Selecting a .gnucash file and clicking import, the file will be imported
+                        to the default book of this account.</p>
+                    <p>It is possible to import the same file twice without transactions and
+                        accounts getting duplicated, only the changes in the file will be
+                        imported.</p>
+                </div>
+                <div>
+                </div>
+            </div>
+            <div style="text-align: right;">
+                <button class="raised">Import</button>
+            </div>
+        </form>
+    </content>
+</div>

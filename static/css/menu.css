@@ -1,0 +1,44 @@
+#menu {
+    position: fixed;
+    top: 0;
+    left: 12em;
+    color: §primary-text-color;
+    background: §background-sidebar-similar;
+    z-index: 10;
+    display: flex;
+    justify-content: left;
+    align-items: stretch;
+    padding: 2em;
+    padding-right: 0;
+}
+
+#menu h2 {
+    font-size: 100%;
+    margin: 0;
+    margin-bottom: 1.5em;
+}
+
+#menu h3 {
+    font-size: 90%;
+    color: §border-color;
+    font-variant: small-caps;
+    padding: 0.75em 0;
+}
+
+#menu h3:not(:first-child) {
+    margin-top: 0.5em;
+}
+
+#menu > div {
+    width: 12em;
+    margin-right: 2em;
+}
+
+#menu .item {
+    padding: 0.5em 0;
+    cursor: pointer;
+}
+
+#menu .item:hover {
+    color: §primary-color;
+}

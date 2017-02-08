@@ -1,2 +1,2 @@
-var DashboardView = AbstractView.extend({
+var App_View_DashboardView = AbstractView.extend({
 });

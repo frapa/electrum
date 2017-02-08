@@ -10,16 +10,15 @@ section table.table thead {
     flex-shrink: 0;
     display: block;
     position: relative;
-    z-index: 3;
-    background: §background-primary-color;
+    background: §primary-color;
     color: black;
-    border-bottom: 1px solid §border-color;
-    box-shadow: 0 0.25em 0.25em -0.25em §border-color;
+    /*border-bottom: 1px solid §border-color;
+    box-shadow: 0 0.25em 0.25em -0.25em §border-color;*/
 }
 
 section table.table > tbody {
     flex-grow: 1;
-    padding-top: 2em;
+    /*padding-top: 2em;*/
     display: block;
     overflow-y: scroll;
 }
@@ -37,18 +36,18 @@ section table.table > thead > tr {
 
 section table.table > tbody > tr {
     margin: 0 3em;
-    border-right: 1px solid §border-color;
-    border-left: 1px solid §border-color;
+    /*border-right: 1px solid §border-color;
+    border-left: 1px solid §border-color;*/
 }
 
-section table.table > tbody > tr:first-child {
+/*section table.table > tbody > tr:first-child {
     border-top: 1px solid §border-color;
-}
+}*/
 
-section table.table > tbody > tr:last-child {
+/*section table.table > tbody > tr:last-child {
     border-bottom: 1px solid §border-color;
     margin-bottom: 2em;
-}
+}*/
 
 section table.table th {
     flex-grow: 1;

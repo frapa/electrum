@@ -1,5 +1,8 @@
-/*@import url('https://fonts.googleapis.com/css?family=Roboto:300,400');
-*/
+@import url('https://fonts.googleapis.com/css?family=Roboto:400');
+
+§background-sidebar-color: #2b303e;
+§background-sidebar-similar: #212634;
+
 html {
     height: 100%;
     font-family: 'Roboto', sans-serif;
@@ -7,7 +10,7 @@ html {
 
 body {
     margin: 0;
-    background: §background-secondary-color;
+    background: §background-primary-color;
     height: 100%;
 }
 
@@ -18,27 +21,37 @@ body {
 }
 
 aside {
+    color: §primary-text-color;
     position: relative;
     flex-grow: 0;
     flex-shrink: 0;
     width: 12em;
-    background: §background-secondary-color;
-    border-right: 1px solid §border-color;
-    box-shadow: 0 0 0.25em §border-color;
-    z-index: 3;
+    background: §background-sidebar-color;
+    /*border-right: 1px solid §border-color;*/
+    /*box-shadow: 0 0 0.5em §border-color-dark;*/
 }
 
 aside header {
+    /* To center text vertically */
+    display: flex;
+    align-content: center;
     font-size: 110%;
-    padding: 0.75em 1.5em;
-    border-bottom: 1px solid §border-color;
+    padding: 1em 1.5em;
+    height: 1.5em;
+    cursor: pointer;
+    background: §background-sidebar-similar;
+    /*border-bottom: 1px solid §border-color;*/
+}
+
+#logo {
+    flex-grow: 1;
 }
 
 .major-menu-link {
     font-size: 110%;
     padding: 0.5em 1.5em;
     cursor: pointer;
-    font-weight: 300;
+    font-weight: 400;
 }
 
 .major-menu-link:hover {
@@ -50,7 +63,7 @@ aside header {
     font-size: 90%;
     padding: 0.5em 2.5em;
     cursor: pointer;
-    font-weight: 300;
+    font-weight: 400;
 }
 
 .minor-menu-link:hover {
@@ -74,11 +87,11 @@ main header.navigation {
     flex-grow: 0;
     position: relative;
     font-size: 110%;
-    background: §background-secondary-color;
+    background: §primary-color;
+    color: §primary-text-color;
     padding: 0.75em 1.5em;
-    border-bottom: 1px solid §border-color;
-    box-shadow: 0 0.25em 0.25em -0.25em §border-color;
-    z-index: 3;
+    /*border-bottom: 1px solid §border-color;
+    box-shadow: 0 0.25em 0.25em -0.25em §border-color;*/
 }
 
 main header.navigation h1 {
@@ -86,7 +99,7 @@ main header.navigation h1 {
     margin: 0;
     margin-right: 1.5em;
     font-size: 100%;
-    font-weight: 300;
+    font-weight: 400;
 }
 
 main header.navigation .toolbar {
@@ -95,6 +108,11 @@ main header.navigation .toolbar {
 
 main section {
     height: 50px; /* Enable height: 100% in inner table in webkit */
+    flex-grow: 1;
+}
+
+main content {
+    padding: 1em 3em;
     flex-grow: 1;
 }
 
@@ -111,7 +129,7 @@ main section {
 }
 
 .toolbar .tool:hover {
-    color: §primary-color;
+    color: black;
 }
 
 .toolbar .tool .icon {

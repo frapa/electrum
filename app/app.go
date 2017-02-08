@@ -2,9 +2,7 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	k "github.com/frapa/candle/kernel"
-	"time"
 )
 
 func createTestData() {
@@ -56,6 +54,8 @@ func parseFlags() {
 	flag.BoolVar(&importBook, "i", false, "import gnucash book")
 	var testData bool
 	flag.BoolVar(&testData, "t", false, "create test data")
+	var exportBook string
+	flag.StringVar(&exportBook, "e", "", "export gnucash book, given id")
 
 	flag.Parse()
 
@@ -65,16 +65,22 @@ func parseFlags() {
 	}
 
 	if importBook {
-		start := time.Now()
+		/*start := time.Now()
 		ImportBookFromGnuCash("cash.gnucash")
 		elapsed := time.Since(start)
-		fmt.Println(elapsed)
+		fmt.Println(elapsed)*/
 	}
 
 	if testData {
 		b := NewBook()
 		b.Name = "234"
 		k.Save(b)
+	}
+
+	if exportBook != "" {
+		var book Book
+		k.All("Book").Filter("Id", "=", exportBook).Get(&book)
+		generateGnucashXml(&book)
 	}
 }
 
@@ -86,6 +92,7 @@ func main() {
 
 	initAccountsController()
 	initTransactionController()
+	initGnucash()
 
 	k.StartApplication("Electrum", ":5555")
 }

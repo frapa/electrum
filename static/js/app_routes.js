@@ -1,11 +1,14 @@
 Electrum.router = new Backbone.Router({
     routes: {
+        // dashboard
         '': function () {
-            Electrum.router.navigate('/dashboard');
+            Electrum.router.navigate('/dashboard', {trigger: true});
         },
         'dashboard': function () {
             Electrum.mainView.openDashboard();
         },
+
+        // accounts
         'accounts': function () {
             Electrum.mainView.openAccounts();
         },
@@ -27,8 +30,22 @@ Electrum.router = new Backbone.Router({
         'expenses': function () {
             Electrum.mainView.openExpenses();
         },
+
+        // reports
         'reports': function () {
             Electrum.mainView.openReports();
-        }
+        },
+
+        // imports
+        'import/gnucash': function () {
+            var gnucashImporter = new App_View_Import_Gnucash();
+            Electrum.mainView.open(gnucashImporter, 'main');
+        },
+
+        // exports
+        'export/gnucash': function () {
+            var gnucashExporter = new App_View_Export_Gnucash();
+            Electrum.mainView.open(gnucashExporter, 'main');
+        },
     },
 });
