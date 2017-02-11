@@ -3,6 +3,7 @@ var App_View_Import_Gnucash = AbstractView.extend({
         'gnucash_import_file_upload': new Kernel_View_Ui_FileUpload({
             name: 'file',
             filetypes: ['application/x-gnucash'],
+            exts: ['gnucash'],
             multiple: true,
             maxsize: 5*1024*1024
         }),

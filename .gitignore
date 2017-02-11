@@ -36,3 +36,6 @@ testing/db.sqlite
 build/db.sqlite
 build/static
 build/*.gnucash
+
+# archive
+archive

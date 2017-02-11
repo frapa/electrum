@@ -265,6 +265,14 @@ func (i *importHelper) importTransactions() error {
 		fromAccount := i.accountMap[fromSplit.Account]
 		toAccount := i.accountMap[toSplit.Account]
 
+		// Some accounts could not be imported due to
+		// missing correponences between account types
+		// In case this transaction involves one of such account,
+		// abort the import of the transaction with no error
+		if fromAccount == nil || toAccount == nil {
+			continue
+		}
+
 		transaction := NewTransaction()
 		transaction.Description = gnuCashTransaction.Description
 		transaction.ImportInfo = id
@@ -297,6 +305,15 @@ func (i *importHelper) importTransactions() error {
 
 		if type_ != "root" {
 			account := i.accountMap[id]
+
+			// Can appen the current account wasn't imported
+			// (some account types are not supported)
+			// Therefore abort cache calculation if the account
+			// was not imported, to avoid invalid pointer deference
+			if account == nil {
+				continue
+			}
+
 			account.TotalCache += i.totalCacheMap[id]
 			account.MonthCache += i.monthCacheMap[id]
 			account.YearCache += i.yearCacheMap[id]

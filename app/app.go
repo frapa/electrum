@@ -60,8 +60,10 @@ func parseFlags() {
 	flag.Parse()
 
 	if createUsers {
-		RegisterNewUser("frapa", "test", "frapa@example.com")
-		RegisterNewUser("frapa2", "test2", "frapa2@example.com")
+		RegisterNewUser("frapa", "elepsw", "francescopasa@gmail.com")
+		RegisterNewUser("dejavu", "mona", "Bazzanella.Davide@gmail.com")
+		RegisterNewUser("maria", "canpsw", "maria.gubert@gmail.com")
+		RegisterNewUser("matteino", "sonogay", "matteo.finazzer@gmail.com")
 	}
 
 	if importBook {
