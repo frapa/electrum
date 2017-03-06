@@ -4,7 +4,7 @@ var App_View_SingleAccount = AbstractView.extend({
 
         // Depending on type, show different columns
         var type = this.model.get('Type');
-        var customizations= null
+        var customizations = null;
         if (type == "expense") {
             customization = this.customizeExpense();
         } else if (type == "income") {
@@ -23,6 +23,15 @@ var App_View_SingleAccount = AbstractView.extend({
                 addingRow: true,
                 beforeSave: funcBeforeSave,
                 columns: columns,
+                order: 'Date desc',
+                actions: [
+					{
+						icon: 'icon-trash',
+						callback: this.deleteTransaction.bind(this),
+						tooltip: 'Delete'
+					},
+				]
+
             })
         };
     },
@@ -95,7 +104,7 @@ var App_View_SingleAccount = AbstractView.extend({
         var _this = this;
         var funcBeforeSave = this.saveAssetTransaction.bind(this);
 
-        var collection = new App_Collection_Transaction({
+        var collection = new App_Collection_Transaction(null, {
             url: '/controller/accounts/InOut/' + _this.model.id
         });
 
@@ -234,5 +243,17 @@ var App_View_SingleAccount = AbstractView.extend({
 
         transaction.relink(direction, transaction.transferLink);
         transaction.relink(notDirection, this.model);
+    },
+
+    deleteTransaction: function (data)
+    {
+        message = new StatusMessage({
+            message: '<content style="flex-grow: 1;"><strong>' + data.model.get('Description') +
+                '</strong> deleted.</content><button class="flat">Undo</button>',
+            end: function () {
+                data.model.destroy();
+            }
+        });
+        message.show();
     }
 });

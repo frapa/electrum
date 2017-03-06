@@ -1,0 +1,1 @@
+../../app/export_gnucash.go

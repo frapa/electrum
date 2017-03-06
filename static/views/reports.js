@@ -1,2 +1,2 @@
-var App_View_ReportsView = Backbone.View.extend({
+var App_View_Reports = AbstractView.extend({
 });

@@ -6,7 +6,7 @@ var App_View_Main = AbstractView.extend({
         this.incomeView = new App_View_AccountsView('Income', 'income');
         this.expensesView = new App_View_AccountsView('Expenses', 'expense');
         
-        this.reportsView = new App_View_ReportsView();
+        this.reportsView = new App_View_Reports();
 
         this.menu = new App_View_Menu();
     },

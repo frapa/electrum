@@ -15,25 +15,31 @@ func (c *transactionController) GetUpdateAccountTotals(ctx *ripple.Context) {
 	}
 
 	user := c.GetUser(ctx)
-	transactionId := ctx.Params["id"]
+	fromId := ctx.Params["fromId"]
+	toId := ctx.Params["toId"]
 
-	var transaction Transaction
-	transQuery := k.All("Transaction").Filter("Id", "=", transactionId)
-	transQuery = transQuery.ApplyReadPermissions(user)
+	account := new(Account)
+	if toId == "new" {
+		transaction := k.All("Transaction").Filter("Id", "=", fromId)
+		transaction = transaction.ApplyWritePermissions(user)
 
-	if transQuery.Count() != 0 {
-		transQuery.Get(&transaction)
+		transaction.To("From").ApplyWritePermissions(user).Get(account)
+		account.RefreshCache()
 
-		var fromAccount, toAccount Account
-		transQuery.To("From").ApplyWritePermissions(user).Get(&fromAccount)
-		transQuery.To("To").ApplyWritePermissions(user).Get(&toAccount)
+		transaction.To("To").ApplyWritePermissions(user).Get(account)
+		account.RefreshCache()
+	} else {
+		fromQuery := k.All("Account").Filter("Id", "=", fromId)
+		fromQuery = fromQuery.ApplyWritePermissions(user)
+		fromQuery.Get(account)
 
-		// total cache
-		fromAccount.UpdateCache(transaction.Date, -transaction.Amount)
-		toAccount.UpdateCache(transaction.Date, transaction.Amount)
+		account.RefreshCache()
 
-		k.Save(&fromAccount)
-		k.Save(&toAccount)
+		toQuery := k.All("Account").Filter("Id", "=", toId)
+		toQuery = toQuery.ApplyWritePermissions(user)
+		toQuery.Get(account)
+
+		account.RefreshCache()
 	}
 }
 
@@ -42,6 +48,6 @@ func initTransactionController() {
 	k.App.RegisterController("transaction", istTransCont)
 
 	k.App.AddRoute(ripple.Route{
-		Pattern:    "/controller/transaction/:_action/:id",
+		Pattern:    "/controller/transaction/:_action/:fromId/:toId",
 		Controller: "transaction"})
 }

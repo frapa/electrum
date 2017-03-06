@@ -23,10 +23,11 @@ func NewBook() *Book {
 }
 
 // also saves and creates account types
-func NewDefaultBook() *Book {
+func NewDefaultBook(g *k.Group) *Book {
 	b := NewBook()
 	b.Name = "Default book"
 	k.Save(b)
+	b.Link("Groups", g)
 
 	types := []string{"asset", "income",
 		"expense", "equity"}
@@ -38,7 +39,25 @@ func NewDefaultBook() *Book {
 
 		k.Save(father)
 		b.Link("RootAccounts", father)
+		father.Link("Groups", g)
 	}
 
 	return b
+}
+
+func (b *Book) RefreshTotalCaches() {
+	var refresh func(accounts []k.AnyModel)
+	refresh = func(accounts []k.AnyModel) {
+		for _, accountInt := range accounts {
+			account := accountInt.(*Account)
+			account.RefreshCache()
+
+			subAccounts := account.To("SubAccounts").GetAll()
+			refresh(subAccounts)
+		}
+	}
+
+	accounts := b.To("RootAccounts").GetAll()
+	refresh(accounts)
+	println(b.Name)
 }

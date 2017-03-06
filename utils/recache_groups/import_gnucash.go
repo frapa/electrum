@@ -1,0 +1,1 @@
+../../app/import_gnucash.go

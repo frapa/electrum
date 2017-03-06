@@ -21,18 +21,87 @@ _.extend(App_Model_Transaction.prototype, {
         this.set({Amount: this.parseAmount(value)});
     },
 
-    sync: function (method, model, options) {
-        var oldCallback = options.success;
-        options.success = function (transaction) {
-            if (method != 'GET') {
-                Backbone.ajax({
-                    url: '/controller/transaction/updateAccountTotals/' + transaction.Id
-                });
+    sync: function (method, model, opts) {
+        var options = opts ? opts : {};
+
+        var atTheEnd = new AsyncNotificationManager(function () {
+            var fromId, toId;
+            if (model.isNew()) {
+                toId = "new";
+            } else {
+                fromId = model.to('From').at(0).id;
+                toId = model.to('To').at(0).id;
             }
 
-            oldCallback.apply(null, arguments);
+            var oldCallback = options && options.success;
+            options.success = function (transaction) {
+                if (method != 'GET' && transaction) {
+                    if (toId == 'new') fromId = transaction.Id;
+
+                    Backbone.ajax({
+                        url: '/controller/transaction/updateAccountTotals/' + fromId + '/' + toId
+                    });
+                }
+
+                if (oldCallback) oldCallback.apply(null, arguments);
+            }
+            
+            Backbone.sync(method, model, options);
+        });
+
+        if (!model.isNew()) {
+            atTheEnd.waitForAction();
+            model.to('From').fetch({
+                success: function () {
+                    atTheEnd.notifyEnd();
+                }
+            });
+            atTheEnd.waitForAction();
+            model.to('To').fetch({
+                success: function () {
+                    atTheEnd.notifyEnd();
+                }
+            });
         }
-        
-        return Backbone.sync(method, model, options);
+
+        atTheEnd.notifyEnd();
+    },
+
+    destroy: function (opts) {
+        var options = opts ? opts : {};
+        var model = this;
+
+        var atTheEnd = new AsyncNotificationManager(function () {
+            var fromId = model.to('From').at(0).id;
+            var toId = model.to('To').at(0).id;
+
+            var oldCallback = options && options.success;
+            options.success = function (transaction) {
+                if (transaction) {
+                    Backbone.ajax({
+                        url: '/controller/transaction/updateAccountTotals/' + fromId + '/' + toId
+                    });
+                }
+
+                if (oldCallback) oldCallback.apply(null, arguments);
+            }
+            
+            Relational_Model.prototype.destroy.call(model, options);
+        });
+
+        atTheEnd.waitForAction();
+        model.to('From').fetch({
+            success: function () {
+                atTheEnd.notifyEnd();
+            }
+        });
+        atTheEnd.waitForAction();
+        model.to('To').fetch({
+            success: function () {
+                atTheEnd.notifyEnd();
+            }
+        });
+
+        atTheEnd.notifyEnd();
     }
 });

@@ -50,7 +50,6 @@ var App_View_Import_Gnucash = AbstractView.extend({
             message: 'File was sucessfully imported (click to go to assets)',
             type: 'success',
             click: function () {
-                console.log(Electrum.allAccountTypes);
                 _.each(Electrum.allAccountTypes, function (collection) {
                     collection.resetFetched(); // otherwise the user needs to reload the page
                 });

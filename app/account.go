@@ -40,7 +40,9 @@ func NewAccount() *Account {
 	return a
 }
 
-func (a *Account) UpdateCache(date time.Time, variation int64) {
+// date is the date of the transaction
+// deprecated because it's just easier to recompute the whole account
+/*func (a *Account) UpdateCache(date time.Time, variation int64) {
 	// Total cache
 	a.TotalCache += variation
 
@@ -75,4 +77,64 @@ func (a *Account) UpdateCache(date time.Time, variation int64) {
 		parentQuery.Get(&parent)
 		parent.UpdateCache(date, variation)
 	}
+}*/
+
+func (a *Account) RefreshCache() (int64, int64, int64) {
+	subTotal := int64(0)
+	subYear := int64(0)
+	subMonth := int64(0)
+
+	subAccounts := a.To("SubAccounts")
+	account := new(Account)
+	for subAccounts.Next() {
+		subAccounts.Get(account)
+		tot, year, month := account.RefreshCache()
+		subTotal += tot
+		subYear += year
+		subMonth += month
+	}
+
+	// reset
+	a.MonthCache = subMonth
+	a.YearCache = subYear
+	a.TotalCache = subTotal
+
+	now := time.Now()
+	beginningOfMonth := time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, time.UTC)
+	beginningOfYear := time.Date(now.Year(), 1, 1, 0, 0, 0, 0, time.UTC)
+
+	in := a.To("In")
+	for in.Next() {
+		var trans Transaction
+		in.Get(&trans)
+
+		a.TotalCache += trans.Amount
+		if trans.Date.After(beginningOfYear) {
+			a.YearCache += trans.Amount
+		}
+
+		if trans.Date.After(beginningOfMonth) {
+			a.MonthCache += trans.Amount
+		}
+	}
+
+	out := a.To("Out")
+	for out.Next() {
+		var trans Transaction
+		out.Get(&trans)
+
+		a.TotalCache -= trans.Amount
+		if trans.Date.After(beginningOfYear) {
+			a.YearCache -= trans.Amount
+		}
+
+		if trans.Date.After(beginningOfMonth) {
+			a.MonthCache -= trans.Amount
+		}
+	}
+
+	a.LastCacheUpdate = now
+	k.Save(a)
+
+	return a.TotalCache, a.YearCache, a.MonthCache
 }

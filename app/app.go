@@ -54,6 +54,8 @@ func parseFlags() {
 	flag.BoolVar(&importBook, "i", false, "import gnucash book")
 	var testData bool
 	flag.BoolVar(&testData, "t", false, "create test data")
+	var refreshData bool
+	flag.BoolVar(&refreshData, "r", false, "refresh cache")
 	var exportBook string
 	flag.StringVar(&exportBook, "e", "", "export gnucash book, given id")
 
@@ -73,6 +75,10 @@ func parseFlags() {
 		fmt.Println(elapsed)*/
 	}
 
+	if refreshData {
+		cronUpdateTotalCaches()
+	}
+
 	if testData {
 		b := NewBook()
 		b.Name = "234"
@@ -86,7 +92,19 @@ func parseFlags() {
 	}
 }
 
+func SetupDatabase() {
+	// To get a write speedup we enable wal mode and sync='NORMAL'
+	// The current pagu.it server is very slow during inserts
+
+	k.GetDb().Exec("PRAGMA journal_mode=WAL;")
+	k.GetDb().Exec("PRAGMA schema.synchronous=NORMAL;")
+	k.GetDb().Exec("PRAGMA wal_autocheckpoint=100;")
+}
+
 func main() {
+	// Settings for the database
+	SetupDatabase()
+
 	k.UpdateSchema()
 	/*createTestData()*/
 

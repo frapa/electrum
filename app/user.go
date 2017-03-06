@@ -5,6 +5,8 @@ import (
 )
 
 func RegisterNewUser(username string, password string, email string) {
+	k.BeginTransaction()
+
 	u := k.NewUser(username, password)
 	// Save email address
 	u.Email = email
@@ -18,15 +20,7 @@ func RegisterNewUser(username string, password string, email string) {
 	u.Link("Groups", g)
 
 	// setup default book
-	b := NewDefaultBook()
-	b.Link("Groups", g)
+	NewDefaultBook(g)
 
-	// allow user acces to his accounts
-	accounts := b.To("RootAccounts")
-	for accounts.Next() {
-		var account Account
-		accounts.Get(&account)
-
-		account.Link("Groups", g)
-	}
+	k.CommitTransaction()
 }

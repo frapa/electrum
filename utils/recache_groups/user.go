@@ -1,0 +1,1 @@
+/home/francesco/Projects/go/src/github.com/frapa/electrum/app/user.go
