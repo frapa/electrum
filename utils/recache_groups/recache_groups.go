@@ -12,7 +12,7 @@ func main() {
 	for _, model := range allModels {
 		groups := model.To("Groups")
 		for groups.Next() {
-			var group k.Group
+			group := k.NewGroup("")
 			groups.Get(&group)
 
 			group.TargetCacheGroup(model)

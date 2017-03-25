@@ -6,7 +6,7 @@ import (
 )
 
 type Transaction struct {
-	k.BaseModel
+	*k.BaseModel
 	Description string
 	Date        time.Time
 	Amount      int64
@@ -14,15 +14,15 @@ type Transaction struct {
 }
 
 func init() {
-	k.DefineLink(Transaction{}, "From", Account{}, "Out")
-	k.DefineLink(Transaction{}, "To", Account{}, "In")
+	k.DefineLink(NewTransaction(), "From", NewAccount(), "Out")
+	k.DefineLink(NewTransaction(), "To", NewAccount(), "In")
 
-	k.RegisterModel(Transaction{})
-	k.RegisterRestResource(Transaction{}, NewTransaction)
+	k.RegisterModel(NewTransaction)
+	k.RegisterRestResource(NewTransaction())
 }
 
 func NewTransaction() *Transaction {
 	t := new(Transaction)
-	t.BaseModel = *k.NewBaseModel()
+	t.BaseModel = k.NewBaseModel()
 	return t
 }

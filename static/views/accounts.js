@@ -143,7 +143,7 @@ var App_View_AccountsView = AbstractView.extend({
 	openAccount: function (account) {
 		Electrum.mainView.open(
 			new App_View_SingleAccount({model: account}),
-			'main'
+            'main'
 		);
 	},
 	

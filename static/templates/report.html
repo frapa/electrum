@@ -1,0 +1,19 @@
+<div id="report">
+    <header class="navigation">
+        <subview name="name"></subview>
+        <span class="toolbar">
+            <!--<span class="tool" id="add-account">
+                <span class="icon-plus-circled icon"></span>
+                <span>Add account</span>
+            </span>-->
+        </span>
+        <span class="tabbar">
+            <%= _.map(tabs, function (tabName) {
+                return '<span class="tab">' + tabName + '</span>';
+            }).join() %>
+        </span>
+    </header>
+    <section>
+        <subview name="tab-content"></subview>
+    </section>
+</div>

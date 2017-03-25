@@ -24,16 +24,29 @@ Electrum.router = new Backbone.Router({
         'assets': function () {
             Electrum.mainView.openAssets();
         },
+        'asset': function () {
+            Electrum.mainView.openAssets();
+        },
         'income': function () {
             Electrum.mainView.openIncome();
         },
         'expenses': function () {
             Electrum.mainView.openExpenses();
         },
+        'expense': function () {
+            Electrum.mainView.openExpenses();
+        },
 
         // reports
         'reports': function () {
             Electrum.mainView.openReports();
+        },
+        'report/:id': function (id) {
+            var reportView = new App_View_Report({
+                model: new App_Model_Report(id == 'new' ? {} : {Id: id})
+            });
+
+            Electrum.mainView.open(reportView, 'main');
         },
 
         // imports
@@ -47,5 +60,5 @@ Electrum.router = new Backbone.Router({
             var gnucashExporter = new App_View_Export_Gnucash();
             Electrum.mainView.open(gnucashExporter, 'main');
         },
-    },
+    }
 });
