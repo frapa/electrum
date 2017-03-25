@@ -124,12 +124,12 @@ func (i *importHelper) getOrCreateRootAccount(type_ string) *Account {
 		account.Father = 1
 		account.Name = "Father '" + type_ + "' account"
 		k.Save(account)
-		account.Link("Groups", *i.group)
+		account.Link("Groups", i.group)
 	} else {
 		// Get the existing one!
-		var tempAccount Account
-		query.Get(&tempAccount)
-		account = &tempAccount
+		tempAccount := NewAccount()
+		query.Get(tempAccount)
+		account = tempAccount
 	}
 
 	return account
@@ -138,7 +138,7 @@ func (i *importHelper) getOrCreateRootAccount(type_ string) *Account {
 func (i *importHelper) wasAccountAlreadyImported(id string) (bool, *Account) {
 	query := k.All("Account").ApplyWritePermissionsGroup(i.group).Filter("ImportInfo", "=", id)
 	if query.Count() != 0 {
-		tempAccount := new(Account)
+		tempAccount := NewAccount()
 		query.Get(tempAccount)
 		return true, tempAccount
 	} else {
@@ -215,7 +215,7 @@ func (i *importHelper) generateAccountStructure() error {
 			parent = rootAccounts[currentAccount.Type]
 		}
 		currentAccount.Link("Parent", parent)
-		currentAccount.Link("Groups", *i.group)
+		currentAccount.Link("Groups", i.group)
 	}
 
 	return nil
@@ -291,7 +291,7 @@ func (i *importHelper) importTransactions() error {
 		k.Save(transaction)
 		transaction.Link("From", fromAccount)
 		transaction.Link("To", toAccount)
-		transaction.Link("Groups", *i.group)
+		transaction.Link("Groups", i.group)
 
 		// Sum up transactions to initialize the caches correctly
 		i.updateCache(fromSplit.Account, -amount, transaction.Date)

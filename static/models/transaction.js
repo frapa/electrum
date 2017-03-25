@@ -72,8 +72,10 @@ _.extend(App_Model_Transaction.prototype, {
         var model = this;
 
         var atTheEnd = new AsyncNotificationManager(function () {
-            var fromId = model.to('From').at(0).id;
-            var toId = model.to('To').at(0).id;
+            var from = model.to('From').at(0);
+            var fromId = from.id;
+            var to = model.to('To').at(0);
+            var toId = to.id;
 
             var oldCallback = options && options.success;
             options.success = function (transaction) {
@@ -81,6 +83,9 @@ _.extend(App_Model_Transaction.prototype, {
                     Backbone.ajax({
                         url: '/controller/transaction/updateAccountTotals/' + fromId + '/' + toId
                     });
+
+                    from.fetch();
+                    to.fetch();
                 }
 
                 if (oldCallback) oldCallback.apply(null, arguments);

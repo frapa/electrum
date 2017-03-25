@@ -18,7 +18,7 @@ func (c *transactionController) GetUpdateAccountTotals(ctx *ripple.Context) {
 	fromId := ctx.Params["fromId"]
 	toId := ctx.Params["toId"]
 
-	account := new(Account)
+	account := NewAccount()
 	if toId == "new" {
 		transaction := k.All("Transaction").Filter("Id", "=", fromId)
 		transaction = transaction.ApplyWritePermissions(user)

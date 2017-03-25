@@ -27,7 +27,7 @@ func uploadGnucash(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	group := new(k.Group)
+	group := k.NewGroup()
 	k.All("Group").Filter("Name", "=", user).Get(group)
 
 	err = ImportBookFromGnuCash(file, group)
@@ -53,9 +53,9 @@ func exportGnucash(writer http.ResponseWriter, request *http.Request) {
 	group := new(k.Group)
 	k.All("Group").Filter("Name", "=", user).Get(group)
 
-	var book Book
+	book := NewBook()
 	k.All("Book").ApplyReadPermissionsGroup(group).Limit(1).Get(&book)
-	fileContent, err := generateGnucashXml(&book)
+	fileContent, err := generateGnucashXml(book)
 
 	if err != nil {
 		http.Error(writer, http.StatusText(http.StatusInternalServerError),

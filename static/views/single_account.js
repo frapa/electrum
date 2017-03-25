@@ -1,9 +1,18 @@
 var App_View_SingleAccount = AbstractView.extend({
+    events: {
+        'click .back-button': 'goBack'
+    },
+
+    goBack: function () {
+        Electrum.router.navigate('/' + this.type, {trigger: true});
+    },
+
     initialize: function (options) {
         Electrum.router.navigate('accounts/' + this.model.get('Id'));
 
         // Depending on type, show different columns
         var type = this.model.get('Type');
+        this.type = type;
         var customizations = null;
         if (type == "expense") {
             customization = this.customizeExpense();

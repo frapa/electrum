@@ -5,20 +5,20 @@ import (
 )
 
 type Book struct {
-	k.BaseModel
+	*k.BaseModel
 	Name string
 }
 
 func init() {
-	k.DefineLink(Book{}, "RootAccounts", Account{}, "Book")
+	k.DefineLink(NewBook(), "RootAccounts", NewAccount(), "Book")
 
-	k.RegisterModel(Book{})
-	k.RegisterRestResource(Book{}, NewBook)
+	k.RegisterModel(NewBook)
+	k.RegisterRestResource(NewBook())
 }
 
 func NewBook() *Book {
 	b := new(Book)
-	b.BaseModel = *k.NewBaseModel()
+	b.BaseModel = k.NewBaseModel()
 	return b
 }
 

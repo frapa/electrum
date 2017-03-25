@@ -9,3 +9,15 @@
     flex-shrink: 1;
     margin: 0 1em;
 }
+
+main section {
+    display: flex;
+    height: 10%;
+    flex-grow: 1;
+}
+
+main content {
+    display: flex;
+    padding: 2em 3em 0 3em;
+    flex-grow: 1;
+}

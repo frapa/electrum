@@ -307,7 +307,7 @@ func generateSingleTransactionGnuXml(transactions []k.AnyModel, buffer *gzip.Wri
 			SecondSplitId string
 		}
 
-		var account Account
+		account := NewAccount()
 		transaction.To("From").Get(&account)
 		fromId := guidMap[account.Id]
 		transaction.To("To").Get(&account)

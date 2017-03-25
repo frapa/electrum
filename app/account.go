@@ -6,7 +6,7 @@ import (
 )
 
 type Account struct {
-	k.BaseModel
+	*k.BaseModel
 	Name        string
 	Description string
 	Type        string
@@ -28,15 +28,15 @@ type Account struct {
 }
 
 func init() {
-	k.DefineLink(Account{}, "SubAccounts", Account{}, "Parent")
+	k.DefineLink(NewAccount(), "SubAccounts", NewAccount(), "Parent")
 
-	k.RegisterModel(Account{})
-	k.RegisterRestResource(Account{}, NewAccount)
+	k.RegisterModel(NewAccount)
+	k.RegisterRestResource(NewAccount())
 }
 
 func NewAccount() *Account {
 	a := new(Account)
-	a.BaseModel = *k.NewBaseModel()
+	a.BaseModel = k.NewBaseModel()
 	return a
 }
 
@@ -85,7 +85,7 @@ func (a *Account) RefreshCache() (int64, int64, int64) {
 	subMonth := int64(0)
 
 	subAccounts := a.To("SubAccounts")
-	account := new(Account)
+	account := NewAccount()
 	for subAccounts.Next() {
 		subAccounts.Get(account)
 		tot, year, month := account.RefreshCache()
@@ -105,8 +105,8 @@ func (a *Account) RefreshCache() (int64, int64, int64) {
 
 	in := a.To("In")
 	for in.Next() {
-		var trans Transaction
-		in.Get(&trans)
+		trans := NewTransaction()
+		in.Get(trans)
 
 		a.TotalCache += trans.Amount
 		if trans.Date.After(beginningOfYear) {
@@ -120,8 +120,8 @@ func (a *Account) RefreshCache() (int64, int64, int64) {
 
 	out := a.To("Out")
 	for out.Next() {
-		var trans Transaction
-		out.Get(&trans)
+		trans := NewTransaction()
+		out.Get(trans)
 
 		a.TotalCache -= trans.Amount
 		if trans.Date.After(beginningOfYear) {
