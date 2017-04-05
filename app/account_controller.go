@@ -38,12 +38,36 @@ func (c *accountController) GetInOut(ctx *ripple.Context) {
 		k.NewRestError("No Account with Id '" + accountId +
 			"' (or permissions missing).").Send(ctx)
 	} else {
+		type LinksHelper struct {
+			From []*Account
+			To   []*Account
+		}
+
+		type TmpTransaction struct {
+			*Transaction
+			Links_ LinksHelper
+		}
+
 		transactions := account.To("In").ApplyReadPermissions(user).GetAll()
 		outTransactions := account.To("Out").ApplyReadPermissions(user).GetAll()
 
 		transactions = append(transactions, outTransactions...)
 
-		ctx.Response.Body = transactions
+		jsonTransactions := []*TmpTransaction{}
+		tmpAccount := NewAccount()
+		for _, transaction := range transactions {
+			jsonTransaction := new(TmpTransaction)
+			jsonTransaction.Transaction = transaction.(*Transaction)
+
+			transaction.To("From").Get(tmpAccount)
+			jsonTransaction.Links_.From = append(jsonTransaction.Links_.From, tmpAccount)
+			transaction.To("To").Get(tmpAccount)
+			jsonTransaction.Links_.To = append(jsonTransaction.Links_.To, tmpAccount)
+
+			jsonTransactions = append(jsonTransactions, jsonTransaction)
+		}
+
+		ctx.Response.Body = jsonTransactions
 	}
 }
 

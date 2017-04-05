@@ -55,6 +55,8 @@ aside {
     flex-shrink: 0;
     width: 12em;
     background: §background-sidebar-color;
+    display: flex;
+    flex-direction: column;
 }
 
 @media only screen and (max-width: 760px) {
@@ -73,6 +75,15 @@ aside header {
     color: §primary-text-color;
     background: §background-sidebar-similar;
     font-weight: 900;
+}
+
+aside content {
+    flex-grow: 1;
+}
+
+aside footer {
+    padding: 0.5em;
+    background: §background-sidebar-similar;
 }
 
 #logo {
