@@ -21,7 +21,7 @@ func cronUpdateTotalCaches() {
 	k.BeginTransaction()
 
 	books := k.All("Book")
-	book := new(Book)
+	book := NewBook()
 
 	for books.Next() {
 		books.Get(book)

@@ -1,4 +1,8 @@
 var App_View_Main = AbstractView.extend({
+    subviews: {
+        'connection-indicator': new Kernel_View_Ui_ConnectionIndicator(),
+    },
+
     initialize: function () {
         this.dashboardView = new App_View_DashboardView();
         

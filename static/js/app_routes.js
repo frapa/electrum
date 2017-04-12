@@ -60,5 +60,11 @@ Electrum.router = new Backbone.Router({
             var gnucashExporter = new App_View_Export_Gnucash();
             Electrum.mainView.open(gnucashExporter, 'main');
         },
+        
+        // user
+        'user/settings': function () {
+			var userSettings = new App_View_UserSettings();
+			Electrum.mainView.open(userSettings, 'main');
+		},
     }
 });

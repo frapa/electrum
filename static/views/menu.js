@@ -1,7 +1,9 @@
 var App_View_Menu = AbstractView.extend({
     events: {
         'click #menu-import-gnucash': 'importGnucash',
-        'click #menu-export-gnucash': 'exportGnucash'
+        'click #menu-export-gnucash': 'exportGnucash',
+        'click #menu-user-logout': 'userLogout',
+        'click #menu-user-settings': 'userSettings'
     },
 
     initialize: function () {
@@ -22,6 +24,19 @@ var App_View_Menu = AbstractView.extend({
         this.close();
     },
 
+	// user functions
+	userLogout: function () {
+		userHelper.logout();
+	},
+	
+	userSettings: function () {
+		Electrum.router.navigate('/user/settings',
+            {trigger: true});
+		this.close();
+		// open new page
+	},
+
+	// menu functions
     open: function () {
         this.isOpen = true;
     },
