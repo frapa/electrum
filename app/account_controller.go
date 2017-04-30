@@ -54,13 +54,15 @@ func (c *accountController) GetInOut(ctx *ripple.Context) {
 		transactions = append(transactions, outTransactions...)
 
 		jsonTransactions := []*TmpTransaction{}
-		tmpAccount := NewAccount()
+		var tmpAccount *Account
 		for _, transaction := range transactions {
 			jsonTransaction := new(TmpTransaction)
 			jsonTransaction.Transaction = transaction.(*Transaction)
 
+			tmpAccount = NewAccount()
 			transaction.To("From").Get(tmpAccount)
 			jsonTransaction.Links_.From = append(jsonTransaction.Links_.From, tmpAccount)
+			tmpAccount = NewAccount()
 			transaction.To("To").Get(tmpAccount)
 			jsonTransaction.Links_.To = append(jsonTransaction.Links_.To, tmpAccount)
 

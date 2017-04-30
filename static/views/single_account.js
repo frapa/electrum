@@ -167,14 +167,16 @@ var App_View_SingleAccount = AbstractView.extend({
     getTransfer: function (transaction, cell, anmgr) {
         cell.attr = 'Name';
 
-        if (transaction.isNew()) {
-            transaction.transfer = '';
-            transaction.trigger('transfer_found', '');
-            return '';
-        }
+        var emptyCounter = 2;
+        var notifyEmpty = function () {
+            emptyCounter -= 1;
+            if (emptyCounter == 0) {
+                transaction.transfer = '';
+                transaction.trigger('transfer_found', '');
+            }
+        };
 
         anmgr.waitForAction();
-
         var _this = this;
         var accountId = this.model.id;
         transaction.to('From').fetch({
@@ -189,13 +191,16 @@ var App_View_SingleAccount = AbstractView.extend({
                         // I know it's a bit brutal and hacky, but works well
                         transaction.transfer = 'From';
                         transaction.trigger('transfer_found', 'From');
-
-                        anmgr.notifyEnd();
                     }
+                } else {
+                    notifyEmpty();
                 }
+
+                anmgr.notifyEnd();
             }
         });
 
+        anmgr.waitForAction();
         transaction.to('To').fetch({
             success: function (collection) {
                 if (collection.length) {
@@ -207,12 +212,17 @@ var App_View_SingleAccount = AbstractView.extend({
                         // see comment above
                         transaction.transfer = 'To';
                         transaction.trigger('transfer_found', 'To');
-
-                        anmgr.notifyEnd();
                     }
+                } else {
+                    notifyEmpty();
                 }
+                
+                anmgr.notifyEnd();
             }
         });
+
+        // Necessary when it isn't asyncronous
+        return cell.data;
     },
 
     saveIn: function (cell, transaction, value) {

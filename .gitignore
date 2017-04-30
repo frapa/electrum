@@ -34,6 +34,8 @@ _testmain.go
 # db
 testing/db.sqlite
 build/db.sqlite
+build/db.sqlite-wal
+build/db.sqlite-shm
 build/static
 build/*.gnucash
 

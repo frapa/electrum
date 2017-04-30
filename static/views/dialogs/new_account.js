@@ -21,7 +21,6 @@ var App_View_Dialog_NewAccount = Kernel_View_Ui_Dialog.extend({
         }); 
         newAccount.link('Parent', parent);
 
-        console.info(123888);
         this.collection.add(newAccount);
         newAccount.save();
 

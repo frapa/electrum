@@ -11,8 +11,30 @@ _.extend(App_Model_Transaction.prototype, {
 
     parseAmount: function (value) {
         var amount = 0;
-        if (value)
-            amount = parseInt(parseFloat(value) * 100);
+        if (value) {
+            // allow some basic math operations in the input
+            var isThereMath =
+                value.indexOf('+') != -1 ||
+                value.indexOf('-') != -1 ||
+                value.indexOf('*') != -1 ||
+                value.indexOf('/') != -1;
+
+            if (isThereMath) {
+                // Extremely simple math parser! Does not support braces.
+                var tockens = value.split(/\+|-/);
+                _.each(tockens, function (tocken) {
+                    var subTockens = tocken.split(/\*|\//);
+                    var subAmount = 0;
+                    _.each(subTockens, function (subTocken) {
+                        
+                    });
+                    amount += subAmount;
+                });
+                console.log(tockens);
+            } else {
+                amount = parseInt(parseFloat(value) * 100);
+            }
+        }
 
         return amount;
     },
