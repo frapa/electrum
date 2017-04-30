@@ -144,7 +144,7 @@ _.extend(App_Model_Transaction.prototype, {
                 if (oldCallback) oldCallback.apply(null, arguments);
             }
             
-            Relational_Model.prototype.destroy.call(model, options);
+            RelationalModel.prototype.destroy.call(model, options);
         });
 
         atTheEnd.waitForAction();

@@ -30,6 +30,7 @@ var App_View_SingleAccount = AbstractView.extend({
                 collection: collection,
                 inlineEditing: true,
                 addingRow: true,
+                initializeAddingModel: this.initializeAddingModel.bind(this),
                 beforeSave: funcBeforeSave,
                 columns: columns,
                 order: 'Date desc',
@@ -45,7 +46,20 @@ var App_View_SingleAccount = AbstractView.extend({
         };
     },
 
+    initializeAddingModel: function (model) {
+        if (this.lastDate !== undefined) {
+            model.set('Date', this.lastDate);
+        }
+        
+        if (this.lastLink !== undefined && this.linkAttr !== undefined) {
+            model.link(this.linkAttr, this.lastLink);
+        }
+    },
+
     customizeExpense: function () {
+        var _this = this;
+        this.linkAttr = 'From';
+
         var columns = [
             {header: 'Date', attr: 'Date'},
             {header: 'Description', attr: 'Description'},
@@ -53,12 +67,12 @@ var App_View_SingleAccount = AbstractView.extend({
             {header: 'Spent', type: 'float',
                 method: 'getFormattedAmount',
                 onSave: function (cell, transaction, value) {
-                    transaction.setAmount(value)
+                    transaction.setAmount(value);
+                    _this.cacheLastValues(transaction, 'From');
                 }
             },
         ];
 
-        var _this = this;
         var funcBeforeSave = function (transaction) {
             transaction.link('To', _this.model);
         };
@@ -69,6 +83,9 @@ var App_View_SingleAccount = AbstractView.extend({
     },
 
     customizeIncome: function () {
+        var _this = this;
+        this.linkAttr = 'To';
+
         var columns = [
             {header: 'Date', attr: 'Date'},
             {header: 'Description', attr: 'Description'},
@@ -76,12 +93,12 @@ var App_View_SingleAccount = AbstractView.extend({
             {header: 'Earned', type: 'float',
                 method: 'getFormattedAmount',
                 onSave: function (cell, transaction, value) {
-                    transaction.setAmount(value)
+                    transaction.setAmount(value);
+                    _this.cacheLastValues(transaction, 'To');
                 }
             },
         ];
 
-        var _this = this;
         var funcBeforeSave = function (transaction) {
             transaction.link('From', _this.model);
         };
@@ -186,6 +203,7 @@ var App_View_SingleAccount = AbstractView.extend({
                     if (fromAccount.id != accountId) {
                         cell.data = fromAccount.get('Name');
                         cell.usedLink = 'From';
+                        cell.collection = transaction.to('From');
 
                         // save for access in other functions of the same row
                         // I know it's a bit brutal and hacky, but works well
@@ -208,6 +226,7 @@ var App_View_SingleAccount = AbstractView.extend({
                     if (toAccount.id != accountId) {
                         cell.data = toAccount.get('Name');
                         cell.usedLink = 'To';
+                        cell.collection = transaction.to('To');
 
                         // see comment above
                         transaction.transfer = 'To';
@@ -262,15 +281,35 @@ var App_View_SingleAccount = AbstractView.extend({
 
         transaction.relink(direction, transaction.transferLink);
         transaction.relink(notDirection, this.model);
+
+        this.cacheLastValues(transaction, direction);
+    },
+
+    cacheLastValues: function (transaction, attr) {
+        // Cache some values for the next insertion
+        this.lastDate = transaction.get('Date');
+        this.lastLink = transaction.to(attr).at(0);
     },
 
     deleteTransaction: function (data)
     {
+        var transactions = this.getView('transactionTable').collection;
+        transactions.remove(data.model);
+
+        var cancel = false;
         message = new StatusMessage({
-            message: '<content style="flex-grow: 1;"><strong>' + data.model.get('Description') +
-                '</strong> deleted.</content><button class="flat">Undo</button>',
+            message: '<strong>' + data.model.get('Description') + '</strong> deleted.',
+            actions: [
+                {
+                    text: 'Undo',
+                    callback: function () {
+                        cancel = true;
+                        transactions.add(data.model);
+                    }
+                }
+            ],
             end: function () {
-                data.model.destroy();
+                if (!cancel) data.model.destroy();
             }
         });
         message.show();
