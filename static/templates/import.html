@@ -1,0 +1,21 @@
+<div id="import-screen-background">
+	<div class="import-dialog">
+		
+		<form name="import-from">
+			<input type="radio" name="where" value="from-file" />from file <span class="icon-monitor"></span>
+			<input type="radio" name="where" value="from-service" />from web service <span class="icon-cloud"></span>
+		</form>
+		<!-- to implement drag and drop on first and the whole second thing-->
+		<hr></hr>
+		<!-- this sector should change if the other radio button is chosen -->
+		<p>Wallet setting</p>
+		currency (most used and all currencies)
+		number format (decimal separator, nr. of decimals digits, thousand separator)
+		date format (separator and order)
+		<p>File setting</p>
+		separator (comma - .csv, tab - .tsv, ...)
+		<hr></hr>
+		<button class="flat" id="back-button">Back <span class="icon-back"></span></button>
+		<button class="flat" id="import-button">Import in wallet <span class="icon-upload"></span></button>
+	</div>
+</div>

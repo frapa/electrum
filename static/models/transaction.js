@@ -9,6 +9,10 @@ _.extend(App_Model_Transaction.prototype, {
         return formattedAmount;
     },
 
+    parseFloat: function (float) {
+        return parseFloat(float);
+    },
+
     parseAmount: function (value) {
         var amount = 0;
         if (value) {
@@ -20,23 +24,50 @@ _.extend(App_Model_Transaction.prototype, {
                 value.indexOf('/') != -1;
 
             if (isThereMath) {
-                // Extremely simple math parser! Does not support braces.
-                var tockens = value.split(/\+|-/);
-                _.each(tockens, function (tocken) {
-                    var subTockens = tocken.split(/\*|\//);
-                    var subAmount = 0;
-                    _.each(subTockens, function (subTocken) {
-                        
-                    });
-                    amount += subAmount;
-                });
-                console.log(tockens);
+                amount = this.parseMathAmount(value);
             } else {
-                amount = parseInt(parseFloat(value) * 100);
+                amount = parseInt(this.parseFloat(value) * 100);
             }
         }
 
         return amount;
+    },
+
+    // Extremely simple math parser! Does not support braces.
+    parseMathAmount: function (value) {
+        var tockens = value.split(/\+|-/);
+        var operators = value;
+        _.each(tockens, function (tocken) {
+            operators = operators.replace(tocken, '');
+        });
+
+        var amount = this.parseFloat(tockens[0]);
+        _.each(tockens.slice(1), function (tocken, i) {
+            var subTockens = tocken.split(/\*|\//);
+            var subOperators = tocken;
+            _.each(subTockens, function (t) {
+                subOperators = subOperators.replace(t, '');
+            });
+
+            var subAmount = this.parseFloat(subTockens[0]);
+            _.each(subTockens.slice(1), function (subTocken, j) {
+                var operator = subOperators.slice(j, j+1);
+                if (operator == '*') {
+                    subAmount *= this.parseFloat(subTocken);
+                } else {
+                    subAmount /= this.parseFloat(subTocken);
+                }
+            });
+
+            var operator = operators.slice(i, i+1);
+            if (operator == '+') {
+                amount += subAmount;
+            } else {
+                amount -= subAmount;
+            }
+        });
+
+        return parseInt(amount * 100);
     },
     
     setAmount: function (value) {
