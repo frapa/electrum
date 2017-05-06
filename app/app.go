@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	//contact "github.com/frapa/candle/contact"
 	k "github.com/frapa/candle/kernel"
 )
 
@@ -46,6 +47,7 @@ func main() {
 	initAccountsController()
 	initTransactionController()
 	initGnucash()
+	startTelegramBot()
 
 	k.StartApplication("Electrum", ":5555")
 }

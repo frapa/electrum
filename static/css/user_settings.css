@@ -1,7 +1,15 @@
 #user-settings content {
-	display:block;
+	display: block;
 }
 
-#user-settings .setting-group {
-	padding-left: 2em;
+#user-settings .setting-group > label {
+    display: block;
+    color: §tertiary-text-color;
+    margin-right: 0.5em;
+    font-size: 80%;
+    margin: 0.25em 0.5em;
+}
+
+.setting-group p {
+    margin: 0.25em 0.5em;
 }

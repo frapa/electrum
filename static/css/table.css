@@ -74,6 +74,8 @@ section table.table td {
     }
     
     #transactions table.table tr:not(.inline-editing) td:nth-child(2) {
+        font-size: 110%;
+        font-weight: bold;
     }
     
     #accounts table.table tr:not(.inline-editing) td:nth-child(3) {
@@ -97,6 +99,7 @@ section table.table td {
 
     #transactions table.table tr:not(.inline-editing) td:nth-child(4),
     #transactions table.table tr:not(.inline-editing) td:nth-child(5) {
+        font-size: 120%;
         position: absolute;
         bottom: 0;
         right: 0;

@@ -3,26 +3,57 @@
         <h1>User settings</h1>
         <span class="toolbar">
         </span>
+        <span class="tabbar">
+            <span class="tab selected" id="tab-account">
+                Account</span>
+            <span class="tab" id="tab-services">
+                Services</span>
+        </span>
     </header>
-    <content>
-		<h3>Profile</h3>
-		<div class="setting-group">
-			<p> <%= username %> </p>
-			<p>*NAME* *SURNAME*</p>
-			<p>Subscribed on: *DATE*</p>
-			<p>Last access on: *DATE*</p>
-		</div>
-		
-		<h3>Security</h3>
-		
-		<div class="setting-group">
-			<h4>Email address</h4>
-			<p>*fuzzed EMAIL*</p>
-			<p>change email address</p>
-			
-			<h4>Password</h4>
-			<p>changed on: *DATE*</p>
-			<p>change password</p>
-		</div>
+    <content id="content-account">
+        <div class="columns">
+            <div>
+                <h3>Personal information</h3>
+                <div class="setting-group">
+                    <subview name="firstName"></subview>
+                    <subview name="lastName"></subview>
+                </div>
+                
+                <h3>Account</h3>
+                <div class="setting-group">
+                    <label>Username</label>
+                    <p><%= username %></p>
+                    <subview name="accountEmail"></subview>
+                </div>
+                
+                <!--<h3>Security</h3>
+                <div class="setting-group">
+                    <p>*fuzzed EMAIL*</p>
+                    <p>change email address</p>
+                    
+                    <p>changed on: *DATE*</p>
+                    <p>change password</p>
+                </div>-->
+            </div>
+            <div>
+            </div>
+            <div>
+            </div>
+        </div>
     </content>
+    <content id="content-services">
+        <div class="columns">
+            <div>
+                <h3>Telegram</h3>
+                <div class="setting-group">
+                    <subview name="telegram"></subview>
+                </div>
+            </div>
+            <div>
+            </div>
+            <div>
+            </div>
+        </div>
+    </content>
+    <script src="/static/content/libs/contact/qrcode.min.js"></script>
 </div>

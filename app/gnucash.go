@@ -12,7 +12,7 @@ func uploadGnucash(writer http.ResponseWriter, request *http.Request) {
 	user := request.FormValue("user")
 	password := request.FormValue("psw")
 
-	err := k.CheckUserPassword(user, password)
+	_, err := k.CheckUserPassword(user, password)
 	if err != nil {
 		http.Error(writer, http.StatusText(http.StatusUnauthorized),
 			http.StatusUnauthorized)
@@ -43,7 +43,7 @@ func exportGnucash(writer http.ResponseWriter, request *http.Request) {
 	user := request.URL.Query().Get("user")
 	password := request.URL.Query().Get("psw")
 
-	err := k.CheckUserPassword(user, password)
+	_, err := k.CheckUserPassword(user, password)
 	if err != nil {
 		http.Error(writer, http.StatusText(http.StatusUnauthorized),
 			http.StatusUnauthorized)
