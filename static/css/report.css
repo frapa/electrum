@@ -1,1 +1,24 @@
+.report-square {
+    display: inline-flex;
+    width: 24em;
+    height: 12em;
+    background: white;
+    box-shadow: 0 0.5em 1em §border-color-light;
+    cursor: pointer;
+}
 
+.report-square div {
+    width: 12em;
+    background-size: cover;
+}
+
+.report-square content {
+    width: 10em;
+    padding: 1em;
+}
+
+/* category report */
+.donut-big {
+    width: 18em;
+    height: 18em;
+}

@@ -1,0 +1,30 @@
+<div id="report-category">
+    <header class="navigation">
+        <h1>Flow by category</h1>
+    </header>
+    <section>
+        <content>
+            <h2>Last Month</h2>
+            <div class="columns">
+                <div style="width: 30em; flex-grow: 0;">
+                    <div id="lastPeriodTopExpenses" class="ct-chart ct-square donut-big"></div>
+                </div>
+                <div>
+                    <subview name="lastPeriodExpenses"></subview>
+                </div>
+            </div>
+
+            <h2>This Month</h2>
+            <div class="columns">
+                <div>
+                    <subview name="thisPeriodExpenses"></subview>
+                </div>
+                <div style="width: 30em; flex-grow: 0;">
+                    <div id="thisPeriodTopExpenses" class="ct-chart ct-square donut-big"></div>
+                </div>
+            </div>
+
+            <div style="height: 3em;"></div>
+        </content>
+    </section>
+</div>

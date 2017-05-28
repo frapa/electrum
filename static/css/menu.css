@@ -23,6 +23,7 @@
     color: §border-color;
     font-variant: small-caps;
     padding: 0.75em 0;
+    margin-bottom: 0;
 }
 
 #menu h3:not(:first-child) {

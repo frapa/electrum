@@ -1,18 +1,18 @@
 Electrum.router = new Backbone.Router({
     routes: {
         // dashboard
-        '': function () {
+        '(/)': function () {
             Electrum.router.navigate('/dashboard', {trigger: true});
         },
-        'dashboard': function () {
+        'dashboard(/)': function () {
             Electrum.mainView.openDashboard();
         },
 
         // accounts
-        'accounts': function () {
+        'accounts(/)': function () {
             Electrum.mainView.openAccounts();
         },
-        'accounts/:id': function (id) {
+        'accounts/:id(/)': function (id) {
             Electrum.allAccounts.fetch({
                 success: function () {
                     Electrum.mainView.open(new App_View_SingleAccount({
@@ -21,50 +21,60 @@ Electrum.router = new Backbone.Router({
                 }
             });
         },
-        'assets': function () {
+        'assets(/)': function () {
             Electrum.mainView.openAssets();
         },
-        'asset': function () {
+        'asset(/)': function () {
             Electrum.mainView.openAssets();
         },
-        'income': function () {
+        'income(/)': function () {
             Electrum.mainView.openIncome();
         },
-        'expenses': function () {
+        'expenses(/)': function () {
             Electrum.mainView.openExpenses();
         },
-        'expense': function () {
+        'expense(/)': function () {
             Electrum.mainView.openExpenses();
         },
 
         // reports
-        'reports': function () {
+        'reports(/)': function () {
             Electrum.mainView.openReports();
         },
-        'report/:id': function (id) {
+
+        'report/:reportId(/)': function (reportId) {
+            new App_Model_PredefinedReport({Id: reportId}).fetch({
+                success: function (report) {
+                    var reportView = new window[report.get('ViewClass')](report);
+                    Electrum.mainView.open(reportView, 'main');
+                }
+            });
+        },
+
+        /*'report/:id': function (id) {
             var reportView = new App_View_Report({
                 model: new App_Model_Report(id == 'new' ? {} : {Id: id})
             });
 
             Electrum.mainView.open(reportView, 'main');
-        },
+        },*/
 
         // imports
-        'import/gnucash': function () {
+        'import/gnucash(/)': function () {
             var gnucashImporter = new App_View_Import_Gnucash();
             Electrum.mainView.open(gnucashImporter, 'main');
         },
 
         // exports
-        'export/gnucash': function () {
+        'export/gnucash(/)': function () {
             var gnucashExporter = new App_View_Export_Gnucash();
             Electrum.mainView.open(gnucashExporter, 'main');
         },
         
         // user
-        'user/settings': function () {
+        'user/settings(/)': function () {
 			var userSettings = new App_View_UserSettings();
 			Electrum.mainView.open(userSettings, 'main');
-		},
-    }
+        },
+    },
 });

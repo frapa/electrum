@@ -5,6 +5,29 @@ import (
 	k "github.com/frapa/candle/kernel"
 )
 
+var allUsers *k.Group
+
+func GenerateGroups() {
+	allUsers = k.NewGroup()
+	allUsers.Name = "All Users"
+	allUsers.Permissions = "r"
+	k.Save(allUsers)
+}
+
+var reports []*PredefinedReport
+
+func GeneratePredefinedReports() {
+	r := NewPredefinedReport()
+	r.Name = "Flow by category"
+	r.ShortName = "Category"
+	r.Description = "See how much you spent and earned for each category during the Week, Month or Year."
+	r.ImageUrl = "/static/content/images/app/reports/expenses_by_category.svg"
+	r.ViewClass = "App_View_Report_Category"
+	k.Save(r)
+	reports = append(reports, r)
+	r.Link("Groups", allUsers)
+}
+
 func RegisterNewUser(username string, password string, email string) {
 	k.BeginTransaction()
 
@@ -30,10 +53,12 @@ func RegisterNewUser(username string, password string, email string) {
 	g := k.NewGroup()
 	g.Name = username
 	g.Permissions = "rw"
-	g.CreatePermissions = "Book,Account,Transaction,Report,Table,Field,Filter,Aggregation,TelegramAccount,EmailAddress,Address"
+	g.CreatePermissions = "Book,Account,Transaction,Report,Table,Field,Filter,Aggregation,TelegramAccount,EmailAddress,Address,PredefinedReportSettings"
 	k.Save(g)
 
 	u.Link("Groups", g)
+	u.Link("Groups", allUsers)
+
 	c.Link("Groups", g)
 	emailAddress.Link("Groups", g)
 

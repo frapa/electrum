@@ -15,6 +15,8 @@ func parseFlags() {
 	flag.Parse()
 
 	if createUsers {
+		GenerateGroups()
+		GeneratePredefinedReports()
 		RegisterNewUser("frapa", "elepsw", "francescopasa@gmail.com")
 		RegisterNewUser("dejavu", "mona", "Bazzanella.Davide@gmail.com")
 		RegisterNewUser("maria", "canpsw", "maria.gubert@gmail.com")
@@ -47,7 +49,9 @@ func main() {
 	initAccountsController()
 	initTransactionController()
 	initGnucash()
-	startTelegramBot()
+	//startTelegramBot()
+
+	InitReportControllers()
 
 	k.StartApplication("Electrum", ":5555")
 }

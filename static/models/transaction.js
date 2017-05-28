@@ -82,8 +82,8 @@ _.extend(App_Model_Transaction.prototype, {
             if (model.isNew()) {
                 toId = "new";
             } else {
-                fromId = model.to('From').at(0).id;
-                toId = model.to('To').at(0).id;
+                fromId = model.to('From').at(0) ? model.to('From').at(0).id : undefined;
+                toId = model.to('To').at(0) ? model.to('To').at(0).id : undefined;
             }
 
             var oldCallback = options && options.success;
@@ -91,9 +91,11 @@ _.extend(App_Model_Transaction.prototype, {
                 if (method != 'GET' && transaction) {
                     if (toId == 'new') fromId = transaction.Id;
 
-                    Backbone.ajax({
-                        url: '/controller/transaction/updateAccountTotals/' + fromId + '/' + toId
-                    });
+                    if (!(fromId == undefined && toId == undefined)) {
+                        Backbone.ajax({
+                            url: '/controller/transaction/updateAccountTotals/' + fromId + '/' + toId
+                        });
+                    }
                 }
 
                 if (oldCallback) oldCallback.apply(null, arguments);
@@ -126,19 +128,21 @@ _.extend(App_Model_Transaction.prototype, {
 
         var atTheEnd = new AsyncNotificationManager(function () {
             var from = model.to('From').at(0);
-            var fromId = from.id;
+            var fromId = from ? from.id : undefined;
             var to = model.to('To').at(0);
-            var toId = to.id;
+            var toId = to ? to.id : undefined;
 
             var oldCallback = options && options.success;
             options.success = function (transaction) {
                 if (transaction) {
-                    Backbone.ajax({
-                        url: '/controller/transaction/updateAccountTotals/' + fromId + '/' + toId
-                    });
+                    if (!(fromId == undefined && toId == undefined)) {
+                        Backbone.ajax({
+                            url: '/controller/transaction/updateAccountTotals/' + fromId + '/' + toId
+                        });
+                    }
 
-                    from.fetch();
-                    to.fetch();
+                    if (from) from.fetch();
+                    if (to) to.fetch();
                 }
 
                 if (oldCallback) oldCallback.apply(null, arguments);

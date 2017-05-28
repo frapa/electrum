@@ -28,7 +28,7 @@ func (c *accountController) GetInOut(ctx *ripple.Context) {
 		return
 	}
 
-	accountId := ctx.Params["param"]
+	accountId := ctx.Params["account"]
 	user := c.GetUser(ctx)
 
 	account := k.All("Account").Filter("Id", "=", accountId)
@@ -78,7 +78,7 @@ func initAccountsController() {
 	k.App.RegisterController("accounts", istAccCont)
 
 	k.App.AddRoute(ripple.Route{
-		Pattern:    "/controller/accounts/:_action/:param",
+		Pattern:    "/controller/accounts/:_action/:account",
 		Controller: "accounts"})
 
 	http.HandleFunc("/controller/", k.App.ServeHTTP)

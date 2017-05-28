@@ -9,6 +9,17 @@
         </span>
     </header>
     <section>
-        <subview name="accountsTable"></subview>
+        <content>
+            <h2>Our best reports</h2>
+            <%  reports.each(function (report) {
+            print('<div onclick="Electrum.router.navigate(\'/report/' + report.id +
+                        '\', {trigger: true});"' +
+                        ' class="report-square">' +
+                        '<div style="background-image: url(' + report.get('ImageUrl') + ')"></div>' +
+                        '<content><h3>' + report.get('Name') + '</h3>' +
+                        '<p>' + report.get('Description') + '</p>' + 
+                        '</div>');
+                }); %>
+        </content>
     </section>
 </div>

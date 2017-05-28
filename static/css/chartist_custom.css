@@ -1,0 +1,127 @@
+.ct-legend {
+    position: relative;
+    z-index: 10;
+}
+
+.ct-legend li {
+    list-style-type: none;
+    margin-bottom: 0.5em;
+}
+
+li:before {
+    margin-top: 0.15em;
+    width: 1em;
+    height: 1em;
+    position: absolute;
+    left: 0.5em;
+    content: '';
+    border-radius: 0.15em;
+    background: black;
+}
+
+.ct-legend.ct-legend-inside {
+    width: 13em;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-right: -16em;
+}
+
+.ct-chart-donut .ct-label {
+    fill: white;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4), -1px 1px 1px rgba(0, 0, 0, 0.4),
+        1px -1px 1px rgba(0, 0, 0, 0.4), -1px -1px 1px rgba(0, 0, 0, 0.4);
+    font-size: 90%;
+}
+
+/* Slice 1 */
+.ct-chart-donut .ct-series-a .ct-slice-donut-solid {
+    fill: #168cde;
+}
+
+.ct-legend .ct-series-0:before {
+    background-color: #168cde;
+}
+
+/* Slice 2 */
+.ct-chart-donut .ct-series-b .ct-slice-donut-solid {
+    fill: #fddb42;
+}
+
+.ct-legend .ct-series-1:before {
+    background-color: #fddb42;
+}
+
+/* Slice 3 */
+.ct-chart-donut .ct-series-c .ct-slice-donut-solid {
+    fill: #00917a;
+}
+
+.ct-legend .ct-series-2:before {
+    background-color: #00917a;
+}
+
+/* Slice 4 */
+.ct-chart-donut .ct-series-d .ct-slice-donut-solid {
+    fill: #ea4b36;
+}
+
+.ct-legend .ct-series-3:before {
+    background-color: #ea4b36;
+}
+
+/* Slice 5 */
+.ct-chart-donut .ct-series-e .ct-slice-donut-solid {
+    fill: #893da6;
+}
+
+.ct-legend .ct-series-4:before {
+    background-color: #893da6;
+}
+
+/* Slice 6 */
+.ct-chart-donut .ct-series-f .ct-slice-donut-solid {
+    fill: #ff8f0f;
+}
+
+.ct-legend .ct-series-5:before {
+    background-color: #ff8f0f;
+}
+
+/* Slice 7 */
+.ct-chart-donut .ct-series-g .ct-slice-donut-solid {
+    fill: #3ea518;
+}
+
+.ct-legend .ct-series-6:before {
+    background-color: #3ea518;
+}
+
+/* Slice 8 */
+.ct-chart-donut .ct-series-h .ct-slice-donut-solid {
+    fill: #49e1f3;
+}
+
+.ct-legend .ct-series-7:before {
+    background-color: #49e1f3;
+}
+
+.ct-donut-center-label-container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ct-donut-center-label {
+    text-align: center;
+}
+
+.ct-donut-total {
+    font-size: 140%;
+    font-weight: bold;
+}

@@ -138,3 +138,7 @@ func (a *Account) RefreshCache() (int64, int64, int64) {
 
 	return a.TotalCache, a.YearCache, a.MonthCache
 }
+
+func (a *Account) ToTransactions() interface{} {
+	return a.To("Transaction")
+}

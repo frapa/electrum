@@ -1,3 +1,21 @@
+main > div:first-child {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+main section {
+    display: flex;
+    height: 10%;
+    flex-grow: 1;
+}
+
+main content {
+    overflow-y: auto;
+    padding: 3em;
+    flex-grow: 1;
+}
+
 .columns {
     display: flex;
     align-items: stretch;
@@ -10,14 +28,20 @@
     margin: 0 1em;
 }
 
-main section {
-    display: flex;
-    height: 10%;
-    flex-grow: 1;
+main content h2 {
+    font-size: 120%;
 }
 
-main content {
-    display: flex;
-    padding: 2em 3em 0 3em;
-    flex-grow: 1;
+main content h2:first-child {
+    margin-top: 0;
+}
+
+main content h3 {
+    color: §secondary-text-color;
+    font-weight: normal;
+    margin-bottom: 1.5em;
+}
+
+main content h3:not(:first-child) {
+    margin-top: 3em;
 }

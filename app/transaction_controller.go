@@ -29,17 +29,22 @@ func (c *transactionController) GetUpdateAccountTotals(ctx *ripple.Context) {
 		transaction.To("To").ApplyWritePermissions(user).Get(account)
 		account.RefreshCache()
 	} else {
-		fromQuery := k.All("Account").Filter("Id", "=", fromId)
-		fromQuery = fromQuery.ApplyWritePermissions(user)
-		fromQuery.Get(account)
+		if fromId != "undefined" {
+			fromQuery := k.All("Account").Filter("Id", "=", fromId)
+			fromQuery = fromQuery.ApplyWritePermissions(user)
+			fromQuery.Get(account)
 
-		account.RefreshCache()
+			account.RefreshCache()
+		}
 
-		toQuery := k.All("Account").Filter("Id", "=", toId)
-		toQuery = toQuery.ApplyWritePermissions(user)
-		toQuery.Get(account)
+		if toId != "undefined" {
+			toQuery := k.All("Account").Filter("Id", "=", toId)
+			toQuery = toQuery.ApplyWritePermissions(user)
+			toQuery.Get(account)
 
-		account.RefreshCache()
+			account.RefreshCache()
+
+		}
 	}
 }
 
